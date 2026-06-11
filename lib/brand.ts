@@ -17,11 +17,10 @@ export const COPY = {
   title: "Done Friday.",
   strap: "Start Sunday. Done Friday.",
   sub: "One end-to-end build, every week. Follow along, or steal the source code.",
-  // Act II — the number (stat from the brief; swap to match the lead vertical)
-  statBig: "64%",
-  statLines: [
-    "40% of firms answer the phone.",
-    "64% of new clients never hear back.",
+  // Act II — the why: the tension, then the answer the stamp delivers
+  whyLines: [
+    "AI makes it easy to build anything.",
+    "We make it simple to be done by Friday.",
   ],
   // Act III — the promise
   promise:

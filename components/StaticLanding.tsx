@@ -49,16 +49,12 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
             <SubscribeForm id="subscribe" initialDone={initialDone} />
           </section>
 
-          <section className={styles.number} aria-labelledby="the-number">
-            <span className={`mono ${styles.kicker}`} id="the-number">
-              The number
+          <section className={styles.why} aria-labelledby="the-why">
+            <span className={`mono ${styles.kicker}`} id="the-why">
+              The why
             </span>
-            <p className={styles.statBig}>{COPY.statBig}</p>
-            <div className={styles.statLines}>
-              {COPY.statLines.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </div>
+            <p className={styles.whyTension}>{COPY.whyLines[0]}</p>
+            <p className={styles.whyAnswer}>{COPY.whyLines[1]}</p>
           </section>
 
           <section className={styles.promise} aria-labelledby="the-promise">

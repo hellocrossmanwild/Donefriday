@@ -6,6 +6,36 @@ import { COLORS } from "@/lib/brand";
 
 export const ACT_MARKS = { act1: 0.01, act2: 0.3, act3: 0.6, act4: 0.85 } as const;
 
+// ——— scroll remap: pins ———
+// Raw scroll is remapped through piecewise segments before it drives
+// anything. Zero-travel segments are pins: the frame holds while the
+// reader keeps scrolling, so the big moments get room to land.
+// [from, to, weight] — weight is the share of total scroll distance.
+const SEGMENTS: Array<[number, number, number]> = [
+  [0, 0.17, 1.0], // Act I — the stamp at rest
+  [0.17, 0.33, 0.9], // anticipation
+  [0.33, 0.48, 1.1], // the press, the DONE print, the answer
+  [0.48, 0.48, 0.8], // PIN — sit with the printed DONE
+  [0.48, 0.62, 0.8], // the world floods to paper
+  [0.62, 0.73, 1.0], // verbs print, the strap lands
+  [0.73, 0.73, 0.8], // PIN — Start Sunday. Done Friday.
+  [0.73, 0.9, 0.8], // the stamp returns
+  [0.9, 1, 0.5], // settle on the form
+];
+const TOTAL_WEIGHT = SEGMENTS.reduce((a, s) => a + s[2], 0);
+
+export function remapScroll(raw: number): number {
+  let start = 0;
+  for (const [from, to, weight] of SEGMENTS) {
+    const span = weight / TOTAL_WEIGHT;
+    if (raw <= start + span) {
+      return from + (to - from) * ((raw - start) / span);
+    }
+    start += span;
+  }
+  return 1;
+}
+
 // ——— easing / ranges ———
 
 export const clamp01 = (v: number) => Math.min(1, Math.max(0, v));

@@ -5,7 +5,7 @@
   background: var(--ink);
   --world-fg: var(--paper);
   opacity: 0;
-  transition: opacity 0.6s ease;
+  transition: opacity 0.8s ease;
 }
 
 .stageReady {
@@ -125,32 +125,33 @@
   justify-content: flex-end;
   align-items: flex-start;
   color: var(--paper);
-  padding: 0 clamp(1.5rem, 7vw, 6rem) 12vh;
+  padding: 0 clamp(1.5rem, 7vw, 6rem) 10vh;
 }
 
-.kicker {
-  color: var(--sage);
-  margin-bottom: 0.9rem;
+.whyStack {
+  display: grid;
 }
 
-.kicker::before {
-  content: "";
-  display: inline-block;
-  width: 2rem;
-  height: 2px;
-  background: var(--brick);
-  margin-right: 0.7rem;
-  vertical-align: middle;
+.whyStack > * {
+  grid-area: 1 / 1;
 }
 
-.statLines {
-  font-size: clamp(19px, 2.6vw, 27px);
-  line-height: 1.45;
-  max-width: 26ch;
+.whyLine {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(24px, 3.4vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  max-width: 18ch;
+  margin: 0;
 }
 
-.statLines p {
-  margin: 0.15rem 0;
+.why1 {
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+
+.why2 {
+  font-weight: 800;
 }
 
 .act3 {

@@ -60,9 +60,9 @@
   margin: 1.4rem 0 2.2rem;
 }
 
-/* The number */
+/* The why */
 
-.number {
+.why {
   padding: clamp(2.5rem, 7vh, 4.5rem) 0;
   border-bottom: 1px solid var(--line);
 }
@@ -83,24 +83,20 @@
   vertical-align: middle;
 }
 
-.statBig {
+.whyTension,
+.whyAnswer {
   font-family: var(--font-display), system-ui, sans-serif;
   font-weight: 800;
-  font-size: clamp(72px, 14vw, 160px);
-  line-height: 0.95;
-  letter-spacing: -0.03em;
+  font-size: clamp(28px, 4.6vw, 52px);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  max-width: 22ch;
+  margin: 0;
+}
+
+.whyAnswer {
+  margin-top: 0.6rem;
   color: var(--brick);
-  margin: 0 0 1rem;
-}
-
-.statLines {
-  max-width: var(--measure);
-  font-size: clamp(20px, 2.6vw, 26px);
-  line-height: 1.4;
-}
-
-.statLines p {
-  margin: 0.2rem 0;
 }
 
 /* The promise */

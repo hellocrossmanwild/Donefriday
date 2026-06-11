@@ -12,6 +12,7 @@ import { track } from "@/lib/analytics";
 import Scene, { ScrollState } from "./Scene";
 import {
   ACT_MARKS,
+  remapScroll,
   worldBackground,
   worldForeground,
 } from "./choreography";
@@ -65,25 +66,27 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     const q = gsap.utils.selector(stage);
     const seenActs = new Set<number>();
 
-    // DOM timeline, normalised 0..1 to mirror the scroll progress
-    const tl = gsap.timeline({
-      defaults: { ease: "none" },
-      scrollTrigger: {
-        trigger: wrap,
-        start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-        onUpdate: (self) => {
-          scroll.p = self.progress;
-          stage.style.backgroundColor = worldBackground(self.progress);
-          stage.style.setProperty("--world-fg", worldForeground(self.progress));
-          (Object.entries(ACT_MARKS) as Array<[string, number]>).forEach(([key, mark], i) => {
-            if (self.progress >= mark && !seenActs.has(i)) {
-              seenActs.add(i);
-              track("act_viewed", { act: i + 1, key });
-            }
-          });
-        },
+    // DOM timeline, normalised 0..1. Raw scroll passes through
+    // remapScroll() — which holds the frame at the pins — before driving
+    // the timeline, the 3D and the colour grade, all from the same value.
+    const tl = gsap.timeline({ defaults: { ease: "none" }, paused: true });
+
+    ScrollTrigger.create({
+      trigger: wrap,
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: (self) => {
+        const p = remapScroll(self.progress);
+        scroll.p = p;
+        tl.progress(p);
+        stage.style.backgroundColor = worldBackground(p);
+        stage.style.setProperty("--world-fg", worldForeground(p));
+        (Object.entries(ACT_MARKS) as Array<[string, number]>).forEach(([key, mark], i) => {
+          if (p >= mark && !seenActs.has(i)) {
+            seenActs.add(i);
+            track("act_viewed", { act: i + 1, key });
+          }
+        });
       },
     });
 
@@ -93,8 +96,11 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
 
     tl.to(q(`.${s.act1}`), { autoAlpha: 0, y: -40, duration: 0.05 }, 0.17);
 
-    // ACT II — the number, after the impact
-    tl.fromTo(q(`.${s.act2}`), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.04 }, 0.385)
+    // ACT II — the why: the tension before the press, the answer after
+    tl.fromTo(q(`.${s.act2}`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.24)
+      .fromTo(q(`.${s.why1}`), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.035 }, 0.25)
+      .to(q(`.${s.why1}`), { autoAlpha: 0, y: -14, duration: 0.025 }, 0.335)
+      .fromTo(q(`.${s.why2}`), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.04 }, 0.405)
       .to(q(`.${s.act2}`), { autoAlpha: 0, duration: 0.045 }, 0.5);
 
     // ACT III — the promise; verb stamps print in sequence
@@ -126,7 +132,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     stage.style.backgroundColor = worldBackground(0);
 
     return () => {
-      tl.scrollTrigger?.kill();
+      ScrollTrigger.getAll().forEach((st) => st.kill());
       tl.kill();
       gsap.ticker.remove(raf);
       lenis.destroy();
@@ -167,8 +173,8 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
 
   return (
     <div ref={wrapRef}>
-      {/* the film's runtime */}
-      <div style={{ height: isMobile ? "640vh" : "850vh" }} aria-hidden="true" />
+      {/* the film's runtime (the pins absorb ~25% of it) */}
+      <div style={{ height: isMobile ? "720vh" : "950vh" }} aria-hidden="true" />
 
       <div ref={stageRef} className={`${s.stage} ${ready ? s.stageReady : ""}`}>
         <div className={s.canvas}>
@@ -177,10 +183,19 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
             gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             camera={{ fov: isMobile ? 46 : 35, position: [0, 0.5, 5.4], near: 0.1, far: 50 }}
             onCreated={() => {
-              requestAnimationFrame(() => {
-                setReady(true);
-                onReady();
-              });
+              // full load before reveal: fonts (the die + print textures
+              // depend on them), a settle beat, then two painted frames —
+              // the curtain holds until the film is genuinely ready
+              (async () => {
+                if (document.fonts?.ready) await document.fonts.ready;
+                await new Promise((r) => setTimeout(r, 250));
+                requestAnimationFrame(() =>
+                  requestAnimationFrame(() => {
+                    setReady(true);
+                    onReady();
+                  }),
+                );
+              })();
             }}
           >
             <Scene scroll={scroll} isMobile={isMobile} />
@@ -206,11 +221,9 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
 
         {/* ACT II */}
         <div className={`${s.layer} ${s.act2}`}>
-          <span className={`mono ${s.kicker}`}>The number</span>
-          <div className={s.statLines}>
-            {COPY.statLines.map((line) => (
-              <p key={line}>{line}</p>
-            ))}
+          <div className={s.whyStack}>
+            <p className={`${s.whyLine} ${s.why1}`}>{COPY.whyLines[0]}</p>
+            <p className={`${s.whyLine} ${s.why2}`}>{COPY.whyLines[1]}</p>
           </div>
         </div>
 

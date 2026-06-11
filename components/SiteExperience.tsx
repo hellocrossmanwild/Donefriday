@@ -56,7 +56,9 @@ export default function SiteExperience({
         <Cinematic
           onReady={() => {
             setFilmReady(true);
-            document.documentElement.classList.add("film-ready");
+            // drop the curtain only once the stage has fully faded in
+            // over it, so the held title never blinks
+            setTimeout(() => document.documentElement.classList.add("film-ready"), 950);
           }}
         />
       ) : null}
