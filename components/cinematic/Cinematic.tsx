@@ -53,7 +53,8 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
 
     // Lenis owns scrolling; the native smooth-behavior would fight it
     document.documentElement.style.scrollBehavior = "auto";
-    const lenis = new Lenis({ lerp: 0.09 });
+    // unhurried: a soft lerp and a calmer wheel slow the film right down
+    const lenis = new Lenis({ lerp: 0.075, wheelMultiplier: 0.8 });
     lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     const raf = (time: number) => lenis.raf(time * 1000);
@@ -87,11 +88,10 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     });
 
     gsap.set(q(`.${s.layer}`), { autoAlpha: 0 });
+    // Act I is the opening frame — visible at rest, it only ever leaves
+    gsap.set(q(`.${s.act1}`), { autoAlpha: 1 });
 
-    // ACT I — the stamp, at rest, loaded
-    tl.fromTo(q(`.${s.act1}`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.02 }, 0.005)
-      .fromTo(q(`.${s.title}`), { y: 28 }, { y: 0, duration: 0.05 }, 0.005)
-      .to(q(`.${s.act1}`), { autoAlpha: 0, y: -40, duration: 0.05 }, 0.17);
+    tl.to(q(`.${s.act1}`), { autoAlpha: 0, y: -40, duration: 0.05 }, 0.17);
 
     // ACT II — the number, after the impact
     tl.fromTo(q(`.${s.act2}`), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.04 }, 0.385)
@@ -168,7 +168,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
   return (
     <div ref={wrapRef}>
       {/* the film's runtime */}
-      <div style={{ height: isMobile ? "480vh" : "620vh" }} aria-hidden="true" />
+      <div style={{ height: isMobile ? "640vh" : "850vh" }} aria-hidden="true" />
 
       <div ref={stageRef} className={`${s.stage} ${ready ? s.stageReady : ""}`}>
         <div className={s.canvas}>

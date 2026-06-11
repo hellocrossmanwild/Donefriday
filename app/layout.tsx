@@ -54,14 +54,30 @@ const jsonLd = {
   },
 };
 
+// Decides film vs static before first paint, so capable browsers never
+// flash the editorial page (and its finale) ahead of the cinematic.
+// Mirrors the runtime check in SiteExperience; CSS keys off html.film.
+const filmGate = `(function(){try{
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(navigator.connection&&navigator.connection.saveData)return;
+  var c=document.createElement('canvas');
+  if(!(c.getContext('webgl2')||c.getContext('webgl')))return;
+  document.documentElement.classList.add('film');
+}catch(e){}})()`;
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en-GB" className={`${display.variable} ${serif.variable} ${mono.variable}`}>
+    <html
+      lang="en-GB"
+      className={`${display.variable} ${serif.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
       <body>
+        <script dangerouslySetInnerHTML={{ __html: filmGate }} />
         {children}
         <script
           type="application/ld+json"
