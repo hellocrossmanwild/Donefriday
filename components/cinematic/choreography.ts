@@ -213,7 +213,7 @@ export function stampPose(p: number, time: number, pressExtra: number): Pose {
   }
 
   // Finale — re-enter from above, poised over the form line
-  const poiseY = 1.55 + Math.sin(time * 1.4) * 0.025;
+  const poiseY = 2.15 + Math.sin(time * 1.4) * 0.025;
   const enter = seg(p, 0.78, 0.9);
   const y = lerp(4.2, poiseY, enter);
   return {
@@ -246,7 +246,7 @@ export function cameraPose(p: number, isMobile: boolean): CamPose {
   // Act III: pull wide as the world floods
   const c: CamPose = { pos: [0, 0.3, 6.2 * back], look: [0, 0.1, 0] };
   // Act IV: settle on the poised stamp above the form
-  const d: CamPose = { pos: [0, 0.55, 4.8 * back], look: [0, 1.3, 0] };
+  const d: CamPose = { pos: [0, 0.55, 4.8 * back], look: [0, 1.6, 0] };
 
   if (p < 0.24) return a;
   if (p < 0.36) return lerpCam(a, b, seg(p, 0.24, 0.36));
