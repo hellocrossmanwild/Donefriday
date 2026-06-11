@@ -19,8 +19,8 @@ export const COPY = {
   sub: "A weekly newsletter for practice owners. One end-to-end build, every Friday — follow along or steal the source code.",
   // Act II — the why: the tension, then the answer the stamp delivers
   whyLines: [
-    "AI makes it easy to build anything.",
-    "We make it simple to be done by Friday.",
+    "AI is making it easy to build anything you can think of.",
+    "We show you how to build things easily to solve your business bottlenecks.",
   ],
   // Act III — the promise
   promise:
