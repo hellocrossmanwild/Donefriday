@@ -23,10 +23,10 @@ export const COPY = {
     "We show you how to build things easily to solve your business bottlenecks.",
   ],
   // Act III — the promise
-  promise:
-    "Every week, one end-to-end build for your practice — shown working, start to finish. Follow along, build it yourself, or steal the source code.",
-  verbs: ["SPECCED", "WIRED", "BUILT", "SHIPPED", "SORTED"],
-  houseLine: "We don't write about AI. We build with it.",
+  promiseKicker: "From idea to…",
+  promiseHeading: "Started Sunday. Done Friday.",
+  steps: ["Spec", "Prompts", "Build", "Tested", "Launched"],
+  houseLine: "We don't just talk about AI, we build with it together.",
   // Act IIIb — the goods: what a subscription actually gets you, by example
   goodsKicker: "Every week, one build, end to end",
   goods: [

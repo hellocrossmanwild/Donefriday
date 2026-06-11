@@ -59,21 +59,17 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
 
           <section className={styles.promise} aria-labelledby="the-promise">
             <span className={`mono ${styles.kicker}`} id="the-promise">
-              Every issue, a verb
+              {COPY.promiseKicker}
             </span>
-            <div className={styles.verbRow}>
-              {COPY.verbs.map((verb, i) => (
-                <StampMark
-                  key={verb}
-                  word={verb}
-                  color={COLORS.ink}
-                  height={40}
-                  rotation={i % 2 === 0 ? -3 : 2.5}
-                  title={verb}
-                />
+            <ul className={styles.stepsList} aria-label="Build steps">
+              {COPY.steps.map((step) => (
+                <li key={step} className={styles.stepsItem}>
+                  <span className={styles.stepsTick} aria-hidden="true">✓</span>
+                  {step}
+                </li>
               ))}
-            </div>
-            <p className={styles.promiseCopy}>{COPY.promise}</p>
+            </ul>
+            <h2 className={styles.promiseHeading}>{COPY.promiseHeading}</h2>
             <blockquote className={styles.houseLine}>{COPY.houseLine}</blockquote>
           </section>
 
