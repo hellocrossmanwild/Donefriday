@@ -40,10 +40,14 @@ export default function SiteExperience({
   }, [initialDone]);
 
   // If the 3D chunk never arrives (slow network, blocked script), fall
-  // back to the static cut rather than holding the curtain forever.
+  // back to the static cut rather than holding the curtain forever —
+  // and unmount the film so a late load can't cover the fallback.
   useEffect(() => {
     if (!loadFilm || filmReady) return;
-    const bail = setTimeout(abortFilm, 12000);
+    const bail = setTimeout(() => {
+      setLoadFilm(false);
+      abortFilm();
+    }, 12000);
     return () => clearTimeout(bail);
   }, [loadFilm, filmReady]);
 
@@ -55,6 +59,8 @@ export default function SiteExperience({
       {loadFilm ? (
         <Cinematic
           onReady={() => {
+            // ignore a readiness that races the bail timeout above
+            if (!document.documentElement.classList.contains("film")) return;
             setFilmReady(true);
             // drop the curtain only once the stage has fully faded in
             // over it, so the held title never blinks
