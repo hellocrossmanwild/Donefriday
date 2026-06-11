@@ -113,12 +113,16 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
 
         <footer className={styles.footer}>
           <span className={`mono ${styles.receipts}`}>
-            Done Friday · donefriday.com · sent weekly, Friday
+            <a href="https://donefriday.com">doneFriday.com</a>
           </span>
           <span className={styles.from}>
-            {COPY.footerFrom}{" "}
-            <a href={COPY.whisperLink.href}>{COPY.whisperLink.label}</a>
+            by <a href={COPY.whisperLink.href}>{COPY.whisperLink.label}</a> 2026
           </span>
+          <nav className={`mono ${styles.footerLinks}`} aria-label="Legal">
+            <a href="/privacy">Privacy</a>
+            <span aria-hidden="true">·</span>
+            <a href="/terms">Terms</a>
+          </nav>
         </footer>
       </div>
     </div>

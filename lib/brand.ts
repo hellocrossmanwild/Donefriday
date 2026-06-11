@@ -41,8 +41,8 @@ export const COPY = {
     "Built with AI, shown working, start to finish. Follow along, use it in your business, or steal the source code.",
   goodsCred: "From the studio that ships its own products — RiskPod, PulseIQ and TapReview.",
   // Act IV — finale
-  finaleHeading: "Stamp your name.",
-  finaleSub: "Free. Weekly. Opt-in only — unsubscribe any time.",
+  finaleHeading: "Subscribe now for free.",
+  finaleSub: "Sent weekly · delivered by Substack",
   successLine: "Done. See you Friday.",
   footerFrom: "From Tom Wild — the studio behind RiskPod, PulseIQ and TapReview.",
   whisperLink: { label: "Hello Crossman", href: "https://hellocrossman.com" },

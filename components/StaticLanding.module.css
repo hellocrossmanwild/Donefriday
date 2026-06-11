@@ -270,9 +270,22 @@
   color: color-mix(in srgb, var(--ink) 55%, var(--paper));
 }
 
+.receipts a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .from {
   font-size: 14px;
   color: color-mix(in srgb, var(--ink) 70%, var(--paper));
+}
+
+.footerLinks {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  color: color-mix(in srgb, var(--ink) 45%, var(--paper));
+  font-size: 12px;
 }
 
 @media (max-width: 640px) {
