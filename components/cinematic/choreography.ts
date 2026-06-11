@@ -4,7 +4,7 @@
 
 import { COLORS } from "@/lib/brand";
 
-export const ACT_MARKS = { act1: 0.01, act2: 0.3, act3: 0.6, act4: 0.85 } as const;
+export const ACT_MARKS = { act1: 0.01, act2: 0.3, act3: 0.6, goods: 0.74, act4: 0.86 } as const;
 
 // ——— scroll remap: pins ———
 // Raw scroll is remapped through piecewise segments before it drives
@@ -19,8 +19,10 @@ const SEGMENTS: Array<[number, number, number]> = [
   [0.48, 0.62, 0.8], // the world floods to paper
   [0.62, 0.73, 1.0], // verbs print, the strap lands
   [0.73, 0.73, 1.6], // PIN — Start Sunday. Done Friday.
-  [0.73, 0.9, 0.8], // the stamp returns
-  [0.9, 1, 0.5], // settle on the form
+  [0.73, 0.82, 0.9], // THE GOODS — example builds print, cred line lands
+  [0.82, 0.82, 1.2], // PIN — sit with the goods
+  [0.82, 0.93, 0.8], // the stamp returns
+  [0.93, 1, 0.5], // settle on the form
 ];
 const TOTAL_WEIGHT = SEGMENTS.reduce((a, s) => a + s[2], 0);
 
@@ -40,7 +42,7 @@ export function remapScroll(raw: number): number {
 // Each tap animates the scroll to the next act's hold-point, so the film
 // plays through in between at a pace we control. Targets sit on the pins
 // (or the end), where the frame is composed and at rest.
-export const TAP_TARGETS = [0.48, 0.73, 1] as const;
+export const TAP_TARGETS = [0.48, 0.73, 0.82, 1] as const;
 
 /** inverse of remapScroll — raw scroll fraction for a remapped progress */
 export function rawForProgress(tp: number): number {
@@ -233,14 +235,14 @@ export function stampPose(p: number, time: number, pressExtra: number): Pose {
     };
   }
 
-  // Offstage during the editorial heart
-  if (p < 0.78) {
+  // Offstage during the editorial heart (Act III and the goods)
+  if (p < 0.84) {
     return { pos: [0, 5, 0], rot: [0, 0, 0], scale: 0.85, visible: false };
   }
 
   // Finale — re-enter from above, poised over the form line
   const poiseY = 2.15 + Math.sin(time * 1.4) * 0.025;
-  const enter = seg(p, 0.78, 0.9);
+  const enter = seg(p, 0.84, 0.94);
   const y = lerp(4.2, poiseY, enter);
   return {
     pos: [0, y - pressExtra * 1.35, 0.9],
@@ -278,8 +280,8 @@ export function cameraPose(p: number, isMobile: boolean): CamPose {
   if (p < 0.36) return lerpCam(a, b, seg(p, 0.24, 0.36));
   if (p < 0.5) return b;
   if (p < 0.66) return lerpCam(b, c, seg(p, 0.5, 0.66));
-  if (p < 0.78) return c;
-  return lerpCam(c, d, seg(p, 0.78, 0.9));
+  if (p < 0.84) return c;
+  return lerpCam(c, d, seg(p, 0.84, 0.94));
 }
 
 function lerpCam(a: CamPose, b: CamPose, t: number): CamPose {

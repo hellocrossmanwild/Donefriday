@@ -93,7 +93,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     const scheduleNext = () => {
       if (nextTimer) clearTimeout(nextTimer);
       nextBtn?.classList.remove(s.nextShown);
-      if (scroll.p > 0.78) return;
+      if (scroll.p > 0.86) return;
       nextTimer = setTimeout(() => nextBtn?.classList.add(s.nextShown), 1000);
     };
 
@@ -157,12 +157,29 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
       .to(q(`.${s.houseLine}`), { clipPath: "inset(0 0% 0 0)", duration: 0.034, ease: "power1.inOut" }, 0.694)
       .to(q(`.${s.act3}`), { autoAlpha: 0, y: -30, duration: 0.04 }, 0.745);
 
+    // THE GOODS — what a subscription gets you, by example; everything is
+    // landed before the 0.82 pin so the held frame is the completed act
+    tl.fromTo(q(`.${s.goods}`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.755)
+      .fromTo(q(`.${s.goodsKicker}`), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.02 }, 0.757);
+    const goodsRows = q(`.${s.goodsRow}`);
+    goodsRows.forEach((el, i) => {
+      tl.fromTo(
+        el,
+        { autoAlpha: 0, scale: 1.3 },
+        { autoAlpha: 1, scale: 1, duration: 0.012, ease: "power3.in" },
+        0.768 + i * 0.013,
+      );
+    });
+    tl.fromTo(q(`.${s.goodsTakeaway}`), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.018 }, 0.796)
+      .fromTo(q(`.${s.goodsCred}`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.014 }, 0.802)
+      .to(q(`.${s.goods}`), { autoAlpha: 0, y: -28, duration: 0.04 }, 0.83);
+
     // ACT IV — stamp your name
     tl.fromTo(
       q(`.${s.act4}`),
       { autoAlpha: 0, y: 36 },
       { autoAlpha: 1, y: 0, duration: 0.05 },
-      0.83,
+      0.9,
     );
     // keep the timeline's full duration at 1 so positions map 1:1 to progress
     tl.to({}, { duration: 0.001 }, 0.999);
@@ -230,7 +247,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
   return (
     <div ref={wrapRef}>
       {/* the film's runtime (the pins absorb ~25% of it) */}
-      <div style={{ height: isMobile ? "720vh" : "950vh" }} aria-hidden="true" />
+      <div style={{ height: isMobile ? "920vh" : "1215vh" }} aria-hidden="true" />
 
       <div ref={stageRef} className={`${s.stage} ${ready ? s.stageReady : ""}`}>
         <div className={s.canvas}>
@@ -295,6 +312,27 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           <h2 className={s.strap}>{COPY.strap}</h2>
           <p className={s.promiseCopy}>{COPY.promise}</p>
           <blockquote className={s.houseLine}>{COPY.houseLine}</blockquote>
+        </div>
+
+        {/* THE GOODS */}
+        <div className={`${s.layer} ${s.goods}`}>
+          <span className={`mono ${s.goodsKicker}`}>{COPY.goodsKicker}</span>
+          <ul className={s.goodsList}>
+            {COPY.goods.map(({ build, verb }) => (
+              <li className={s.goodsRow} key={verb}>
+                <span className={s.goodsBuild}>{build}</span>
+                <StampMark
+                  word={verb}
+                  color={COLORS.brick}
+                  height={isMobile ? 28 : 36}
+                  rotation={-3}
+                  title={verb}
+                />
+              </li>
+            ))}
+          </ul>
+          <p className={s.goodsTakeaway}>{COPY.goodsTakeaway}</p>
+          <p className={s.goodsCred}>{COPY.goodsCred}</p>
         </div>
 
         {/* ACT IV */}

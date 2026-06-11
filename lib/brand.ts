@@ -27,6 +27,19 @@ export const COPY = {
     "Every week, one end-to-end build for your practice — shown working, start to finish. Follow along, build it yourself, or steal the source code.",
   verbs: ["SPECCED", "WIRED", "BUILT", "SHIPPED", "SORTED"],
   houseLine: "We don't write about AI. We build with it.",
+  // Act IIIb — the goods: what a subscription actually gets you, by example
+  goodsKicker: "Every week, one build, end to end",
+  goods: [
+    // internal tool for the practice
+    { build: "An enquiry bot that answers a law firm's after-hours calls", verb: "ANSWERED" },
+    // internal tool for the practice
+    { build: "An invoice chaser that clears an accountancy firm's debtor list", verb: "CHASED" },
+    // product for their clients/audience
+    { build: "A booking flow an optometrist's patients use to fill empty slots", verb: "BOOKED" },
+  ],
+  goodsTakeaway:
+    "Built with AI, shown working, start to finish. Follow along, use it in your business, or steal the source code.",
+  goodsCred: "From the studio that ships its own products — RiskPod, PulseIQ and TapReview.",
   // Act IV — finale
   finaleHeading: "Stamp your name.",
   finaleSub: "Free. Weekly. Opt-in only — unsubscribe any time.",

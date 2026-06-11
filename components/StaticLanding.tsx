@@ -77,6 +77,22 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
             <blockquote className={styles.houseLine}>{COPY.houseLine}</blockquote>
           </section>
 
+          <section className={styles.goods} aria-labelledby="the-goods">
+            <span className={`mono ${styles.kicker}`} id="the-goods">
+              {COPY.goodsKicker}
+            </span>
+            <ul className={styles.goodsList}>
+              {COPY.goods.map(({ build, verb }) => (
+                <li className={styles.goodsRow} key={verb}>
+                  <span className={styles.goodsBuild}>{build}</span>
+                  <StampMark word={verb} color={COLORS.brick} height={30} rotation={-3} title={verb} />
+                </li>
+              ))}
+            </ul>
+            <p className={styles.goodsTakeaway}>{COPY.goodsTakeaway}</p>
+            <p className={styles.goodsCred}>{COPY.goodsCred}</p>
+          </section>
+
           <section className={styles.finale} aria-labelledby="stamp-your-name">
             <h2 className={styles.finaleHeading} id="stamp-your-name">
               {COPY.finaleHeading}

@@ -24,11 +24,11 @@ await btn.waitFor({ state: "visible", timeout: 6000 });
 console.log("visible after settle delay: true");
 await page.screenshot({ path: "/tmp/tap-0-act1.png" });
 
-for (let i = 1; i <= 3; i++) {
+for (let i = 1; i <= 4; i++) {
   await btn.click();
   await page.waitForTimeout(1200); // mid-glide — must be hidden
   const midGlide = await btn.isVisible();
-  await btn.waitFor({ state: i < 3 ? "visible" : "hidden", timeout: 10000 }).catch(() => {});
+  await btn.waitFor({ state: i < 4 ? "visible" : "hidden", timeout: 10000 }).catch(() => {});
   await page.waitForTimeout(400);
   await page.screenshot({ path: `/tmp/tap-${i}.png` });
   console.log(`tap ${i}: hidden mid-glide: ${!midGlide}, visible after settle: ${await btn.isVisible()}`);
