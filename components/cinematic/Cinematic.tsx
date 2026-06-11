@@ -85,8 +85,8 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     const q = gsap.utils.selector(stage);
     const seenActs = new Set<number>();
 
-    // The advance stamp stays hidden while the film moves; it presses in
-    // 2s after the frame settles (and never over the finale form).
+    // The advance stamp stays hidden while the film moves; it stamps in
+    // 1s after the frame settles (and never over the finale form).
     const nextBtn = nextRef.current;
     let nextTimer: ReturnType<typeof setTimeout> | undefined;
     let lastP = -1;
@@ -94,7 +94,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
       if (nextTimer) clearTimeout(nextTimer);
       nextBtn?.classList.remove(s.nextShown);
       if (scroll.p > 0.78) return;
-      nextTimer = setTimeout(() => nextBtn?.classList.add(s.nextShown), 2000);
+      nextTimer = setTimeout(() => nextBtn?.classList.add(s.nextShown), 1000);
     };
 
     // DOM timeline, normalised 0..1. Raw scroll passes through

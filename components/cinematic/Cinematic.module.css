@@ -108,21 +108,26 @@
 .nextShown {
   visibility: visible;
   pointer-events: auto;
-  animation: next-stamp 0.4s cubic-bezier(0.22, 1.4, 0.36, 1) forwards;
+  animation: next-stamp 0.5s cubic-bezier(0.22, 1.2, 0.36, 1) forwards;
 }
 
+/* the die coming down: fades in big and high, shrinks onto the page
+   while twisting into its resting tilt, with a tiny rebound on impact */
 @keyframes next-stamp {
   0% {
     opacity: 0;
-    scale: 1.7;
+    transform: scale(2.4) rotate(9deg);
   }
-  60% {
+  55% {
     opacity: 1;
-    scale: 0.94;
+    transform: scale(0.94) rotate(-2deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(1deg);
   }
   100% {
     opacity: 1;
-    scale: 1;
+    transform: scale(1) rotate(0deg);
   }
 }
 
