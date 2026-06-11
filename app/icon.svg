@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <g transform="rotate(-4 32 32)">
+    <rect x="4" y="18" width="56" height="28" rx="3" fill="none" stroke="#BD4332" stroke-width="5"/>
+    <text x="32" y="33" text-anchor="middle" dominant-baseline="central" fill="#BD4332" font-family="system-ui, sans-serif" font-weight="700" font-size="15" letter-spacing="1">DONE</text>
+  </g>
+</svg>

@@ -1,0 +1,175 @@
+.page {
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.inner {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Masthead */
+
+.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.4rem 0 1.1rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.mastheadName {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(22px, 3vw, 30px);
+  letter-spacing: -0.01em;
+}
+
+.dateline {
+  color: color-mix(in srgb, var(--ink) 60%, var(--paper));
+}
+
+.mastheadRight {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* Hero */
+
+.hero {
+  padding: clamp(3rem, 8vh, 6rem) 0 clamp(2.5rem, 6vh, 4rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.heroStamp {
+  margin-bottom: 1.8rem;
+}
+
+.heroTitle {
+  font-size: clamp(34px, 5.4vw, 58px);
+  max-width: 18ch;
+}
+
+.heroSub {
+  max-width: var(--measure);
+  font-size: 19px;
+  margin: 1.4rem 0 2.2rem;
+}
+
+/* The number */
+
+.number {
+  padding: clamp(2.5rem, 7vh, 4.5rem) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.kicker {
+  display: block;
+  color: var(--sage);
+  margin-bottom: 1.2rem;
+}
+
+.kicker::before {
+  content: "";
+  display: inline-block;
+  width: 2.2rem;
+  height: 2px;
+  background: var(--brick);
+  margin-right: 0.8rem;
+  vertical-align: middle;
+}
+
+.statBig {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(72px, 14vw, 160px);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  color: var(--brick);
+  margin: 0 0 1rem;
+}
+
+.statLines {
+  max-width: var(--measure);
+  font-size: clamp(20px, 2.6vw, 26px);
+  line-height: 1.4;
+}
+
+.statLines p {
+  margin: 0.2rem 0;
+}
+
+/* The promise */
+
+.promise {
+  padding: clamp(2.5rem, 7vh, 4.5rem) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.verbRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.4rem;
+  align-items: center;
+  margin: 1.6rem 0 2rem;
+}
+
+.promiseCopy {
+  max-width: var(--measure);
+  font-size: clamp(20px, 2.6vw, 25px);
+  line-height: 1.45;
+}
+
+.houseLine {
+  margin-top: 2.2rem;
+  background: var(--sage-wash);
+  border-left: 3px solid var(--sage);
+  padding: 1.1rem 1.4rem;
+  max-width: var(--measure);
+  font-style: italic;
+  font-size: 21px;
+}
+
+/* Finale */
+
+.finale {
+  padding: clamp(3rem, 8vh, 5rem) 0;
+  border-bottom: 2px solid var(--ink);
+}
+
+.finaleHeading {
+  font-size: clamp(30px, 4.5vw, 44px);
+  margin-bottom: 1.6rem;
+}
+
+/* Footer */
+
+.footer {
+  padding: 1.6rem 0 2.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.receipts {
+  color: color-mix(in srgb, var(--ink) 55%, var(--paper));
+}
+
+.from {
+  font-size: 14px;
+  color: color-mix(in srgb, var(--ink) 70%, var(--paper));
+}
+
+@media (max-width: 640px) {
+  .masthead {
+    flex-wrap: wrap;
+  }
+
+  .dateline {
+    display: none;
+  }
+}
