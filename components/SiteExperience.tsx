@@ -22,11 +22,10 @@ export default function SiteExperience({
   children: ReactNode;
   initialDone?: boolean;
 }) {
-  // the curtain shows from first client render in film mode, and must be
-  // torn down on every exit path (bail, abort), not just on readiness
-  const [curtain, setCurtain] = useState(
-    () => typeof document !== "undefined" && document.documentElement.classList.contains("film"),
-  );
+  // the curtain mounts after hydration (the pre-paint dark background in
+  // globals.css covers the gap) and must be torn down on every exit path:
+  // film ready, bail, post-subscribe abort
+  const [curtain, setCurtain] = useState(false);
   const [loadFilm, setLoadFilm] = useState(false);
   const [filmReady, setFilmReady] = useState(false);
 
@@ -39,6 +38,7 @@ export default function SiteExperience({
     }
     if (!document.documentElement.classList.contains("film")) return;
 
+    setCurtain(true);
     const idle =
       "requestIdleCallback" in window
         ? (cb: () => void) => requestIdleCallback(cb, { timeout: 2000 })
