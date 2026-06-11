@@ -96,11 +96,12 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
 
     tl.to(q(`.${s.act1}`), { autoAlpha: 0, y: -40, duration: 0.05 }, 0.17);
 
-    // ACT II — the why: the tension before the press, the answer after
+    // ACT II — the why: the tension lands alone before the press; once the
+    // stamp is down it dims to a setup line and the answer prints beneath it
     tl.fromTo(q(`.${s.act2}`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.24)
       .fromTo(q(`.${s.why1}`), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.035 }, 0.25)
-      .to(q(`.${s.why1}`), { autoAlpha: 0, y: -14, duration: 0.025 }, 0.335)
-      .fromTo(q(`.${s.why2}`), { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.04 }, 0.405)
+      .to(q(`.${s.why1}`), { opacity: 0.55, duration: 0.04 }, 0.4)
+      .fromTo(q(`.${s.why2}`), { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.04 }, 0.405)
       .to(q(`.${s.act2}`), { autoAlpha: 0, duration: 0.045 }, 0.5);
 
     // ACT III — the promise; verb stamps print in sequence
@@ -116,7 +117,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     });
     tl.fromTo(q(`.${s.strap}`), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.025 }, 0.655)
       .fromTo(q(`.${s.promiseCopy}`), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.025 }, 0.68)
-      .fromTo(q(`.${s.houseLine}`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.025 }, 0.705)
+      .to(q(`.${s.houseLine}`), { clipPath: "inset(0 0% 0 0)", duration: 0.06, ease: "power1.inOut" }, 0.703)
       .to(q(`.${s.act3}`), { autoAlpha: 0, y: -30, duration: 0.04 }, 0.745);
 
     // ACT IV — stamp your name

@@ -86,25 +86,6 @@ html.film .static-cut {
   display: none;
 }
 
-html.film body::before {
-  content: "Done Friday.";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  padding-bottom: calc(16vh + 96px);
-  font-family: var(--font-display), system-ui, sans-serif;
-  font-weight: 800;
-  font-size: clamp(46px, 9vw, 104px);
-  letter-spacing: -0.025em;
-  color: var(--paper);
-}
-
-html.film-ready body::before {
-  content: none;
-}
 
 /* ————— Subscribe form ————— */
 

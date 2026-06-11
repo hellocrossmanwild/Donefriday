@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { ReactNode, useEffect, useState } from "react";
+import StampCurtain from "@/components/StampCurtain";
 
 // The film is a separate chunk, loaded after first paint. The choice of
 // film vs static is made pre-paint by the inline gate in app/layout.tsx
@@ -21,12 +22,18 @@ export default function SiteExperience({
   children: ReactNode;
   initialDone?: boolean;
 }) {
+  // the curtain shows from first client render in film mode, and must be
+  // torn down on every exit path (bail, abort), not just on readiness
+  const [curtain, setCurtain] = useState(
+    () => typeof document !== "undefined" && document.documentElement.classList.contains("film"),
+  );
   const [loadFilm, setLoadFilm] = useState(false);
   const [filmReady, setFilmReady] = useState(false);
 
   useEffect(() => {
     if (initialDone) {
       // post-subscribe redirect: keep the calm page
+      setCurtain(false);
       abortFilm();
       return;
     }
@@ -40,10 +47,15 @@ export default function SiteExperience({
   }, [initialDone]);
 
   // If the 3D chunk never arrives (slow network, blocked script), fall
-  // back to the static cut rather than holding the curtain forever.
+  // back to the static cut rather than holding the curtain forever —
+  // and unmount the film so a late load can't cover the fallback.
   useEffect(() => {
     if (!loadFilm || filmReady) return;
-    const bail = setTimeout(abortFilm, 12000);
+    const bail = setTimeout(() => {
+      setLoadFilm(false);
+      setCurtain(false);
+      abortFilm();
+    }, 12000);
     return () => clearTimeout(bail);
   }, [loadFilm, filmReady]);
 
@@ -52,13 +64,19 @@ export default function SiteExperience({
       <div className="static-cut" hidden={filmReady}>
         {children}
       </div>
+      {curtain && <StampCurtain hide={filmReady} />}
       {loadFilm ? (
         <Cinematic
           onReady={() => {
+            // ignore a readiness that races the bail timeout above
+            if (!document.documentElement.classList.contains("film")) return;
             setFilmReady(true);
             // drop the curtain only once the stage has fully faded in
-            // over it, so the held title never blinks
-            setTimeout(() => document.documentElement.classList.add("film-ready"), 950);
+            // over it, so the held frame never blinks
+            setTimeout(() => {
+              document.documentElement.classList.add("film-ready");
+              setCurtain(false);
+            }, 950);
           }}
         />
       ) : null}
