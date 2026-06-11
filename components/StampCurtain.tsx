@@ -2,8 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-// Loading curtain: dark stage + stamp-outline SVG border that draws around
-// the viewport edges while the 3D film chunk loads.
+// Loading curtain: dark stage with a stamp-outline border that draws and
+// re-draws around the viewport edge until the 3D film chunk is ready.
 export default function StampCurtain({ hide }: { hide: boolean }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const rectRef = useRef<SVGRectElement>(null);
@@ -27,16 +27,20 @@ export default function StampCurtain({ hide }: { hide: boolean }) {
     rect.style.strokeDashoffset = String(perimeter);
 
     let rafId: number;
-    let startTs: number | null = null;
-    const dur = 2600;
+    const cycle = 2800; // ms per half-cycle: draw, then chase off
+
+    const easeInOut = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
 
     function draw(ts: number) {
-      if (startTs === null) startTs = ts;
-      const raw = Math.min(1, (ts - startTs) / dur);
-      // ease in-out cubic
-      const t = raw < 0.5 ? 4 * raw ** 3 : 1 - (-2 * raw + 2) ** 3 / 2;
-      rect!.style.strokeDashoffset = String(perimeter * (1 - t));
-      if (raw < 1) rafId = requestAnimationFrame(draw);
+      const phase = (ts / cycle) % 2;
+      if (phase < 1) {
+        // ink the border on, clockwise from the top-left
+        rect!.style.strokeDashoffset = String(perimeter * (1 - easeInOut(phase)));
+      } else {
+        // the tail chases the head off, same direction — a travelling band
+        rect!.style.strokeDashoffset = String(-perimeter * easeInOut(phase - 1));
+      }
+      rafId = requestAnimationFrame(draw);
     }
 
     rafId = requestAnimationFrame(draw);
@@ -50,43 +54,26 @@ export default function StampCurtain({ hide }: { hide: boolean }) {
         inset: 0,
         zIndex: 50,
         background: "var(--ink)",
-        display: "flex",
-        alignItems: "flex-end",
-        justifyContent: "center",
-        paddingBottom: "calc(16vh + 96px)",
         opacity: hide ? 0 : 1,
         transition: "opacity 0.85s ease",
         pointerEvents: hide ? "none" : "auto",
       }}
+      aria-hidden="true"
     >
       <svg
         ref={svgRef}
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
         fill="none"
-        aria-hidden="true"
       >
         <rect
           ref={rectRef}
           x={18}
           y={18}
           rx={3}
-          stroke="rgba(246, 241, 232, 0.3)"
+          stroke="rgba(246, 241, 232, 0.35)"
           strokeWidth="1.5"
         />
       </svg>
-      <span
-        style={{
-          position: "relative",
-          zIndex: 1,
-          fontFamily: "var(--font-display), system-ui, sans-serif",
-          fontSize: "clamp(46px, 9vw, 104px)",
-          fontWeight: 800,
-          letterSpacing: "-0.025em",
-          color: "var(--paper)",
-        }}
-      >
-        Done Friday.
-      </span>
     </div>
   );
 }

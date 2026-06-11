@@ -22,7 +22,9 @@ export default function SiteExperience({
   children: ReactNode;
   initialDone?: boolean;
 }) {
-  const [inFilmMode] = useState(
+  // the curtain shows from first client render in film mode, and must be
+  // torn down on every exit path (bail, abort), not just on readiness
+  const [curtain, setCurtain] = useState(
     () => typeof document !== "undefined" && document.documentElement.classList.contains("film"),
   );
   const [loadFilm, setLoadFilm] = useState(false);
@@ -31,6 +33,7 @@ export default function SiteExperience({
   useEffect(() => {
     if (initialDone) {
       // post-subscribe redirect: keep the calm page
+      setCurtain(false);
       abortFilm();
       return;
     }
@@ -50,6 +53,7 @@ export default function SiteExperience({
     if (!loadFilm || filmReady) return;
     const bail = setTimeout(() => {
       setLoadFilm(false);
+      setCurtain(false);
       abortFilm();
     }, 12000);
     return () => clearTimeout(bail);
@@ -60,7 +64,7 @@ export default function SiteExperience({
       <div className="static-cut" hidden={filmReady}>
         {children}
       </div>
-      {inFilmMode && !initialDone && <StampCurtain hide={filmReady} />}
+      {curtain && <StampCurtain hide={filmReady} />}
       {loadFilm ? (
         <Cinematic
           onReady={() => {
@@ -68,8 +72,11 @@ export default function SiteExperience({
             if (!document.documentElement.classList.contains("film")) return;
             setFilmReady(true);
             // drop the curtain only once the stage has fully faded in
-            // over it, so the held title never blinks
-            setTimeout(() => document.documentElement.classList.add("film-ready"), 950);
+            // over it, so the held frame never blinks
+            setTimeout(() => {
+              document.documentElement.classList.add("film-ready");
+              setCurtain(false);
+            }, 950);
           }}
         />
       ) : null}
