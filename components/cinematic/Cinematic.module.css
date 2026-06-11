@@ -1,0 +1,266 @@
+.stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--ink);
+  --world-fg: var(--paper);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.stageReady {
+  opacity: 1;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+}
+
+/* ————— chrome ————— */
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem clamp(1.2rem, 4vw, 2.4rem);
+  color: var(--world-fg);
+  pointer-events: none;
+}
+
+.header > * {
+  pointer-events: auto;
+}
+
+.mastheadName {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.dateline {
+  opacity: 0.65;
+}
+
+/* ————— act layers ————— */
+
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.act1 {
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  color: var(--paper);
+  padding: 0 1.5rem 16vh;
+}
+
+.title {
+  font-size: clamp(46px, 9vw, 104px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.sub {
+  margin-top: 1.3rem;
+  font-size: clamp(17px, 2.2vw, 22px);
+  color: color-mix(in srgb, var(--paper) 82%, transparent);
+  max-width: 34ch;
+}
+
+.cue {
+  position: absolute;
+  bottom: 2.2rem;
+  left: 50%;
+  translate: -50%;
+  color: color-mix(in srgb, var(--paper) 55%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cue::after {
+    content: "";
+    display: block;
+    width: 1px;
+    height: 2rem;
+    margin: 0.7rem auto 0;
+    background: currentColor;
+    animation: cue-drop 1.8s ease-in-out infinite;
+    transform-origin: top;
+  }
+}
+
+@keyframes cue-drop {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.act2 {
+  justify-content: flex-end;
+  align-items: flex-start;
+  color: var(--paper);
+  padding: 0 clamp(1.5rem, 7vw, 6rem) 10vh;
+}
+
+.whyStack {
+  display: grid;
+}
+
+.whyStack > * {
+  grid-area: 1 / 1;
+}
+
+.whyLine {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(24px, 3.4vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  max-width: 18ch;
+  margin: 0;
+}
+
+.why1 {
+  color: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+
+.why2 {
+  font-weight: 800;
+}
+
+.act3 {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--ink);
+  padding: 0 1.5rem;
+  gap: 1.8rem;
+}
+
+.verbRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.7rem 1.5rem;
+  max-width: 72rem;
+}
+
+.verb {
+  display: inline-block;
+}
+
+.strap {
+  font-size: clamp(34px, 5.2vw, 60px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.promiseCopy {
+  font-size: clamp(18px, 2.2vw, 23px);
+  line-height: 1.5;
+  max-width: 44ch;
+  margin: 0;
+}
+
+.houseLine {
+  background: var(--sage-wash);
+  border-left: 3px solid var(--sage);
+  padding: 0.9rem 1.3rem;
+  font-style: italic;
+  font-size: clamp(17px, 2vw, 21px);
+  margin: 0;
+}
+
+.act4 {
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  color: var(--ink);
+  padding: 0 1.5rem 16vh;
+}
+
+.act4inner {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  width: 100%;
+  max-width: 30rem;
+}
+
+.finaleHeading {
+  font-size: clamp(32px, 5vw, 50px);
+}
+
+.act4 :global(.subscribe) {
+  width: 100%;
+  text-align: left;
+}
+
+.footer {
+  position: absolute;
+  bottom: 1.3rem;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  color: color-mix(in srgb, var(--ink) 55%, transparent);
+  pointer-events: auto;
+}
+
+.from {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+@media (max-width: 640px) {
+  .dateline {
+    display: none;
+  }
+
+  .act2 {
+    padding-bottom: 9vh;
+  }
+
+  .act4 {
+    padding-bottom: 15vh;
+  }
+
+  .footer {
+    padding: 0 1rem;
+    text-align: center;
+  }
+}

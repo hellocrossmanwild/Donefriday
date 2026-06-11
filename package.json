@@ -1,0 +1,30 @@
+{
+  "name": "donefriday",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "check": "tsc --noEmit",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/postprocessing": "^3.0.4",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.17",
+    "next": "^15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.170.0",
+    "typescript": "^5.7.2"
+  }
+}

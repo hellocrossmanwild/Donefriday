@@ -1,0 +1,258 @@
+:root {
+  /* Palette — donefriday-brand.md */
+  --brick: #bd4332;
+  --brick-pressed: #9a3324;
+  --ink: #1b1815;
+  --paper: #f6f1e8;
+  --line: #e3dccf;
+  --sage: #7e8c6d;
+  --sage-wash: #ecefe5;
+
+  --measure: 38rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 18px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display), system-ui, sans-serif;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+a {
+  color: var(--sage);
+  text-decoration-color: color-mix(in srgb, var(--sage) 50%, transparent);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--ink);
+}
+
+.mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ————— film takeover —————
+   html.film is set pre-paint for capable browsers: the static cut never
+   shows; a dark Act-I curtain holds the frame until the 3D is ready. */
+
+html.film body {
+  background: var(--ink);
+}
+
+html.film .static-cut {
+  display: none;
+}
+
+html.film body::before {
+  content: "Done Friday.";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: calc(16vh + 96px);
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  font-size: clamp(46px, 9vw, 104px);
+  letter-spacing: -0.025em;
+  color: var(--paper);
+}
+
+html.film-ready body::before {
+  content: none;
+}
+
+/* ————— Subscribe form ————— */
+
+.subscribe {
+  max-width: 30rem;
+}
+
+.subscribe-row {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--ink);
+}
+
+.subscribe input[type="email"] {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 19px;
+  padding: 0.65rem 0.25rem;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+}
+
+.subscribe input[type="email"]::placeholder {
+  color: color-mix(in srgb, var(--ink) 45%, transparent);
+  font-style: italic;
+}
+
+.subscribe input[type="email"]:focus {
+  outline: none;
+}
+
+.subscribe-row:focus-within {
+  border-bottom-color: var(--brick);
+}
+
+.subscribe button {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  padding: 0.65rem 1.4rem;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+}
+
+.subscribe button:hover {
+  background: var(--brick);
+}
+
+.subscribe button:focus-visible,
+.subscribe input[type="email"]:focus-visible {
+  outline: 2px solid var(--brick);
+  outline-offset: 3px;
+}
+
+.subscribe button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.subscribe-note {
+  margin-top: 0.6rem;
+  color: color-mix(in srgb, var(--ink) 62%, var(--paper));
+  font-size: 12px;
+}
+
+.subscribe-error {
+  margin-top: 0.6rem;
+  color: var(--brick-pressed);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Success — the email, stamped DONE */
+
+.subscribe-done {
+  position: relative;
+  display: inline-block;
+  padding: 0.4rem 0;
+}
+
+.subscribe-done .stamped-email {
+  font-family: var(--font-serif), Georgia, serif;
+  font-size: 21px;
+  border-bottom: 2px solid var(--ink);
+  padding: 0.4rem 0.5rem;
+  display: inline-block;
+}
+
+.subscribe-done .done-print {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -58%;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .subscribe-done .done-print {
+    animation: stamp-press 0.36s cubic-bezier(0.22, 1.4, 0.36, 1) both;
+    animation-delay: 0.12s;
+  }
+}
+
+@keyframes stamp-press {
+  0% {
+    opacity: 0;
+    scale: 1.6;
+  }
+  60% {
+    opacity: 1;
+    scale: 0.96;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.subscribe-done-line {
+  margin-top: 0.8rem;
+  font-style: italic;
+}
+
+/* Persistent subscribe shortcut */
+
+.skip-to-subscribe {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1px solid currentColor;
+  padding: 0.45rem 0.9rem;
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.skip-to-subscribe:hover {
+  color: var(--brick);
+}
+
+.skip-to-subscribe:focus-visible {
+  outline: 2px solid var(--brick);
+  outline-offset: 3px;
+}

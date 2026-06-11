@@ -1,0 +1,89 @@
+import type { Metadata } from "next";
+import { Schibsted_Grotesk, Newsreader, Geist_Mono } from "next/font/google";
+import { COPY, SITE_URL } from "@/lib/brand";
+import "./globals.css";
+
+const display = Schibsted_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
+
+const serif = Newsreader({
+  subsets: ["latin"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+});
+
+const mono = Geist_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+});
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: "Done Friday — one end-to-end build for your practice, every week",
+  description:
+    "A weekly newsletter for owners of small professional-services firms. Every week, one end-to-end build — follow along, build it yourself, or steal the source code. Start Sunday. Done Friday.",
+  openGraph: {
+    title: "Done Friday",
+    description: COPY.strap,
+    url: SITE_URL,
+    siteName: "Done Friday",
+    type: "website",
+    locale: "en_GB",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Done Friday",
+    description: COPY.strap,
+  },
+  alternates: { canonical: SITE_URL },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Done Friday",
+  url: SITE_URL,
+  description: COPY.sub,
+  publisher: {
+    "@type": "Person",
+    name: "Tom Wild",
+    url: "https://hellocrossman.com",
+  },
+};
+
+// Decides film vs static before first paint, so capable browsers never
+// flash the editorial page (and its finale) ahead of the cinematic.
+// Mirrors the runtime check in SiteExperience; CSS keys off html.film.
+const filmGate = `(function(){try{
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(navigator.connection&&navigator.connection.saveData)return;
+  var c=document.createElement('canvas');
+  if(!(c.getContext('webgl2')||c.getContext('webgl')))return;
+  document.documentElement.classList.add('film');
+}catch(e){}})()`;
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html
+      lang="en-GB"
+      className={`${display.variable} ${serif.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
+      <body>
+        <script dangerouslySetInnerHTML={{ __html: filmGate }} />
+        {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </body>
+    </html>
+  );
+}
