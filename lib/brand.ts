@@ -16,7 +16,7 @@ export const COPY = {
   domain: "donefriday.com",
   title: "Start Sunday. Done Friday.",
   strap: "Start Sunday. Done Friday.",
-  sub: "One end-to-end build, every week. Follow along, or steal the source code.",
+  sub: "A weekly newsletter for practice owners. One end-to-end build, every Friday — follow along or steal the source code.",
   // Act II — the why: the tension, then the answer the stamp delivers
   whyLines: [
     "AI makes it easy to build anything.",
