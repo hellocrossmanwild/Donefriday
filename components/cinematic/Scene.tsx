@@ -16,17 +16,27 @@ const look = new THREE.Vector3();
 export default function Scene({
   scroll,
   isMobile,
+  onFirstFrames,
 }: {
   scroll: ScrollState;
   isMobile: boolean;
+  onFirstFrames?: () => void;
 }) {
   const stampRef = useRef<THREE.Group>(null);
   const keyRef = useRef<THREE.SpotLight>(null);
   const ambientRef = useRef<THREE.AmbientLight>(null);
   const rimRef = useRef<THREE.DirectionalLight>(null);
+  const frames = useRef(0);
   const { camera } = useThree();
 
   useFrame(({ clock }) => {
+    // genuine readiness: the scene has actually drawn — shaders compiled,
+    // textures uploaded — for a handful of frames, not a timer's guess
+    if (frames.current <= 5) {
+      frames.current += 1;
+      if (frames.current === 5) onFirstFrames?.();
+    }
+
     const p = scroll.p;
     const t = clock.getElapsedTime();
 

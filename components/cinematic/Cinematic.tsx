@@ -38,11 +38,27 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const [ready, setReady] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
   const scroll = useMemo<ScrollState>(() => ({ p: 0, press: 0 }), []);
   const isMobile = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches,
     [],
   );
+
+  // The die face and ink prints are canvas-painted with the brand fonts,
+  // so the scene only mounts once they're usable (with a cap — a hung
+  // font fetch must not hold the page hostage).
+  useEffect(() => {
+    let alive = true;
+    const fonts = document.fonts?.ready ?? Promise.resolve();
+    const cap = new Promise((r) => setTimeout(r, 2500));
+    Promise.race([fonts, cap]).then(() => {
+      if (alive) setFontsLoaded(true);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   useEffect(() => {
     if (!ready) return;
@@ -183,23 +199,18 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
             dpr={[1, isMobile ? 1.5 : 2]}
             gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
             camera={{ fov: isMobile ? 46 : 35, position: [0, 0.5, 5.4], near: 0.1, far: 50 }}
-            onCreated={() => {
-              // full load before reveal: fonts (the die + print textures
-              // depend on them), a settle beat, then two painted frames —
-              // the curtain holds until the film is genuinely ready
-              (async () => {
-                if (document.fonts?.ready) await document.fonts.ready;
-                await new Promise((r) => setTimeout(r, 250));
-                requestAnimationFrame(() =>
-                  requestAnimationFrame(() => {
-                    setReady(true);
-                    onReady();
-                  }),
-                );
-              })();
-            }}
           >
-            <Scene scroll={scroll} isMobile={isMobile} />
+            {fontsLoaded ? (
+              <Scene
+                scroll={scroll}
+                isMobile={isMobile}
+                onFirstFrames={() => {
+                  // the scene has genuinely drawn — reveal the stage
+                  setReady(true);
+                  onReady();
+                }}
+              />
+            ) : null}
           </Canvas>
         </div>
 
