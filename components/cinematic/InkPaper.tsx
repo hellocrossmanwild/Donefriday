@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { COLORS } from "@/lib/brand";
-import { displayFontFamily } from "@/lib/stamp-mark";
+import { displayFontFamily, paintStampMark } from "@/lib/stamp-mark";
 import {
   CONTACT_UV,
   PAPER_CENTER,
@@ -124,7 +124,8 @@ export default function InkPaper({ scroll }: { scroll: { p: number } }) {
     [],
   );
 
-  // Paint the stat print once the display font is ready
+  // Paint the print once the display font is ready. The stamp prints what
+  // its face says — DONE — from the same mark definition as the rubber die.
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -137,16 +138,18 @@ export default function InkPaper({ scroll }: { scroll: { p: number } }) {
       canvas.height = 704; // plane is 5.8 × 4.0 — keep aspect close
       const ctx = canvas.getContext("2d")!;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // colour comes from the shader; alpha is the print
+      const mark = paintStampMark({
+        word: "DONE",
+        color: "#ffffff",
+        height: 150,
+        fontFamily: displayFontFamily(),
+      });
       ctx.save();
       // contact UV (0.5, 0.6) → canvas coords (v flips)
       ctx.translate(canvas.width * CONTACT_UV[0], canvas.height * (1 - CONTACT_UV[1]));
-      ctx.rotate((-3 * Math.PI) / 180);
-      ctx.fillStyle = "#ffffff"; // colour comes from the shader; alpha is the print
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      const family = displayFontFamily();
-      ctx.font = `800 270px ${family}`;
-      ctx.fillText("64%", 0, 0);
+      ctx.rotate((-2.6 * Math.PI) / 180); // matches the stamp's roll at contact
+      ctx.drawImage(mark, -mark.width / 2, -mark.height / 2);
       ctx.restore();
 
       const tex = new THREE.CanvasTexture(canvas);

@@ -15,7 +15,8 @@ export const COPY = {
   masthead: "Done Friday",
   domain: "donefriday.com",
   title: "Done Friday.",
-  sub: "One problem in your practice. One working tool. Every Friday.",
+  strap: "Start Sunday. Done Friday.",
+  sub: "One end-to-end build, every week. Follow along, or steal the source code.",
   // Act II — the number (stat from the brief; swap to match the lead vertical)
   statBig: "64%",
   statLines: [
@@ -24,7 +25,7 @@ export const COPY = {
   ],
   // Act III — the promise
   promise:
-    "Every week, one tool you can build and have working by Friday. Built, shown, shipped.",
+    "Every week, one end-to-end build for your practice — shown working, start to finish. Follow along, build it yourself, or steal the source code.",
   verbs: ["ANSWERED", "CHASED", "SHIPPED", "BOOKED", "FILED"],
   houseLine: "We don't write about AI. We build with it.",
   // Act IV — finale

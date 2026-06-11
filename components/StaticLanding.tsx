@@ -39,12 +39,12 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
             <div className={styles.heroStamp}>
               <StampMark word="DONE" height={72} title="DONE — the Done Friday stamp" />
             </div>
-            <h1 className={styles.heroTitle}>{COPY.sub}</h1>
+            <h1 className={styles.heroTitle}>{COPY.strap}</h1>
             <p className={styles.heroSub}>
               A weekly letter for owners of small professional-services firms —
-              solicitors, accountants, brokers, optometrists. Each issue is one
-              small software build, finished and working in your practice by
-              Friday.
+              solicitors, accountants, brokers, optometrists. Every issue is one
+              end-to-end build, shown working in a real practice. Follow along,
+              build it yourself, or steal the source code.
             </p>
             <SubscribeForm id="subscribe" initialDone={initialDone} />
           </section>

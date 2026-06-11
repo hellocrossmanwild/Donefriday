@@ -22,12 +22,12 @@ const mono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Done Friday — one working tool for your practice, every Friday",
+  title: "Done Friday — one end-to-end build for your practice, every week",
   description:
-    "A weekly newsletter for owners of small professional-services firms. One problem in your practice, one working tool, every Friday. We don't write about AI. We build with it.",
+    "A weekly newsletter for owners of small professional-services firms. Every week, one end-to-end build — follow along, build it yourself, or steal the source code. Start Sunday. Done Friday.",
   openGraph: {
     title: "Done Friday",
-    description: COPY.sub,
+    description: COPY.strap,
     url: SITE_URL,
     siteName: "Done Friday",
     type: "website",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Done Friday",
-    description: COPY.sub,
+    description: COPY.strap,
   },
   alternates: { canonical: SITE_URL },
 };
