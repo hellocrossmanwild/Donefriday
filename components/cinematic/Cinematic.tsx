@@ -297,20 +297,20 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
         {/* ACT III */}
         <div className={`${s.layer} ${s.act3}`}>
           <div className={s.verbRow}>
-            {COPY.verbs.map((verb, i) => (
-              <span className={s.verb} key={verb}>
+            {COPY.steps.map((step, i) => (
+              <span className={s.verb} key={step}>
                 <StampMark
-                  word={verb}
+                  word={step.toUpperCase()}
                   color={COLORS.ink}
                   height={isMobile ? 34 : 46}
                   rotation={i % 2 === 0 ? -3 : 2.5}
-                  title={verb}
+                  title={step}
                 />
               </span>
             ))}
           </div>
           <h2 className={s.strap}>{COPY.strap}</h2>
-          <p className={s.promiseCopy}>{COPY.promise}</p>
+          <p className={s.promiseCopy}>{COPY.promiseHeading}</p>
           <blockquote className={s.houseLine}>{COPY.houseLine}</blockquote>
         </div>
 
