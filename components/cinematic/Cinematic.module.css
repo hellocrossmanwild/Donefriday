@@ -88,37 +88,66 @@
   max-width: 34ch;
 }
 
-.cue {
+/* tap-to-advance — a stamp-edge ring that beckons downward */
+
+.next {
   position: absolute;
-  bottom: 2.2rem;
+  bottom: max(1.6rem, env(safe-area-inset-bottom));
   left: 50%;
   translate: -50%;
-  color: color-mix(in srgb, var(--paper) 55%, transparent);
+  z-index: 30;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid color-mix(in srgb, var(--world-fg) 60%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--world-fg);
+  cursor: pointer;
+  pointer-events: auto;
+  transition:
+    opacity 0.45s ease,
+    visibility 0.45s,
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.next:hover,
+.next:focus-visible {
+  background: var(--brick);
+  border-color: var(--brick);
+  color: var(--paper);
+}
+
+.next:focus-visible {
+  outline: 2px solid var(--brick);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .cue::after {
-    content: "";
-    display: block;
-    width: 1px;
-    height: 2rem;
-    margin: 0.7rem auto 0;
-    background: currentColor;
-    animation: cue-drop 1.8s ease-in-out infinite;
-    transform-origin: top;
+  .next svg {
+    animation: next-beckon 1.9s ease-in-out infinite;
   }
 }
 
-@keyframes cue-drop {
+@keyframes next-beckon {
   0%,
   100% {
-    transform: scaleY(0.3);
-    opacity: 0.4;
+    transform: translateY(-2px);
+    opacity: 0.65;
   }
   50% {
-    transform: scaleY(1);
+    transform: translateY(3px);
     opacity: 1;
   }
+}
+
+.nextHidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .act2 {

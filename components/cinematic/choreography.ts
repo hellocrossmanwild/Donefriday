@@ -36,6 +36,32 @@ export function remapScroll(raw: number): number {
   return 1;
 }
 
+// ——— tap-to-advance ———
+// Each tap animates the scroll to the next act's hold-point, so the film
+// plays through in between at a pace we control. Targets sit on the pins
+// (or the end), where the frame is composed and at rest.
+export const TAP_TARGETS = [0.48, 0.73, 1] as const;
+
+/** inverse of remapScroll — raw scroll fraction for a remapped progress */
+export function rawForProgress(tp: number): number {
+  // prefer the middle of a pin so the frame is held, not on the edge
+  let start = 0;
+  for (const [from, to, weight] of SEGMENTS) {
+    const span = weight / TOTAL_WEIGHT;
+    if (from === to && Math.abs(from - tp) < 1e-6) return start + span / 2;
+    start += span;
+  }
+  start = 0;
+  for (const [from, to, weight] of SEGMENTS) {
+    const span = weight / TOTAL_WEIGHT;
+    if (from < to && tp >= from && tp <= to) {
+      return start + span * ((tp - from) / (to - from));
+    }
+    start += span;
+  }
+  return 1;
+}
+
 // ——— easing / ranges ———
 
 export const clamp01 = (v: number) => Math.min(1, Math.max(0, v));

@@ -12,6 +12,8 @@ import { track } from "@/lib/analytics";
 import Scene, { ScrollState } from "./Scene";
 import {
   ACT_MARKS,
+  TAP_TARGETS,
+  rawForProgress,
   remapScroll,
   worldBackground,
   worldForeground,
@@ -36,6 +38,7 @@ function dateline() {
 export default function Cinematic({ onReady }: { onReady: () => void }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const [ready, setReady] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -97,6 +100,8 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
         tl.progress(p);
         stage.style.backgroundColor = worldBackground(p);
         stage.style.setProperty("--world-fg", worldForeground(p));
+        // the advance button bows out as the finale (and its form) arrives
+        nextRef.current?.classList.toggle(s.nextHidden, p > 0.78);
         (Object.entries(ACT_MARKS) as Array<[string, number]>).forEach(([key, mark], i) => {
           if (p >= mark && !seenActs.has(i)) {
             seenActs.add(i);
@@ -180,6 +185,22 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     });
   }
 
+  // Tap-to-advance: animate the scroll to the next act's hold-point so the
+  // film plays through on the way — same choreography, directed pacing.
+  // Free scrolling stays available underneath; the button is the guide.
+  function advance() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const next = TAP_TARGETS.find((t) => t > scroll.p + 0.02) ?? 1;
+    const target = rawForProgress(next) * max;
+    const lenis = lenisRef.current;
+    if (lenis) {
+      lenis.scrollTo(target, { duration: 2.8, easing: (t: number) => 1 - Math.pow(1 - t, 3) });
+    } else {
+      window.scrollTo({ top: target, behavior: "smooth" });
+    }
+    track("tap_advance", { target: next });
+  }
+
   function jumpToSubscribe() {
     const lenis = lenisRef.current;
     const target = document.body.scrollHeight;
@@ -230,7 +251,6 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
         <div className={`${s.layer} ${s.act1}`}>
           <h1 className={s.title}>{COPY.title}</h1>
           <p className={s.sub}>{COPY.sub}</p>
-          <span className={`mono ${s.cue}`}>Scroll</span>
         </div>
 
         {/* ACT II */}
@@ -274,6 +294,26 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
             </span>
           </footer>
         </div>
+
+        {/* tap-to-advance — the guide through the film */}
+        <button
+          ref={nextRef}
+          type="button"
+          className={s.next}
+          onClick={advance}
+          aria-label="Continue to the next scene"
+        >
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path
+              d="M5 9l7 7 7-7"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
