@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { ReactNode, useEffect, useState } from "react";
+import StampCurtain from "@/components/StampCurtain";
 
 // The film is a separate chunk, loaded after first paint. The choice of
 // film vs static is made pre-paint by the inline gate in app/layout.tsx
@@ -21,6 +22,9 @@ export default function SiteExperience({
   children: ReactNode;
   initialDone?: boolean;
 }) {
+  const [inFilmMode] = useState(
+    () => typeof document !== "undefined" && document.documentElement.classList.contains("film"),
+  );
   const [loadFilm, setLoadFilm] = useState(false);
   const [filmReady, setFilmReady] = useState(false);
 
@@ -56,6 +60,7 @@ export default function SiteExperience({
       <div className="static-cut" hidden={filmReady}>
         {children}
       </div>
+      {inFilmMode && !initialDone && <StampCurtain hide={filmReady} />}
       {loadFilm ? (
         <Cinematic
           onReady={() => {
