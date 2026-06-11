@@ -117,7 +117,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     });
     tl.fromTo(q(`.${s.strap}`), { autoAlpha: 0, y: 18 }, { autoAlpha: 1, y: 0, duration: 0.025 }, 0.655)
       .fromTo(q(`.${s.promiseCopy}`), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.025 }, 0.68)
-      .fromTo(q(`.${s.houseLine}`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.025 }, 0.705)
+      .to(q(`.${s.houseLine}`), { clipPath: "inset(0 0% 0 0)", duration: 0.06, ease: "power1.inOut" }, 0.703)
       .to(q(`.${s.act3}`), { autoAlpha: 0, y: -30, duration: 0.04 }, 0.745);
 
     // ACT IV — stamp your name

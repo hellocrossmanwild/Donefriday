@@ -14,7 +14,7 @@ export const COLORS = {
 export const COPY = {
   masthead: "Done Friday",
   domain: "donefriday.com",
-  title: "Done Friday.",
+  title: "Start Sunday. Done Friday.",
   strap: "Start Sunday. Done Friday.",
   sub: "One end-to-end build, every week. Follow along, or steal the source code.",
   // Act II — the why: the tension, then the answer the stamp delivers
@@ -25,7 +25,7 @@ export const COPY = {
   // Act III — the promise
   promise:
     "Every week, one end-to-end build for your practice — shown working, start to finish. Follow along, build it yourself, or steal the source code.",
-  verbs: ["ANSWERED", "CHASED", "SHIPPED", "BOOKED", "FILED"],
+  verbs: ["SPECCED", "WIRED", "BUILT", "SHIPPED", "SORTED"],
   houseLine: "We don't write about AI. We build with it.",
   // Act IV — finale
   finaleHeading: "Stamp your name.",
