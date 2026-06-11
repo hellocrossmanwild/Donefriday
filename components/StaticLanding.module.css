@@ -175,6 +175,54 @@
   margin: 0;
 }
 
+/* Newsletter CTA */
+
+.newsletterCta {
+  margin: 0 -1.5rem;
+  padding: clamp(3rem, 8vh, 5.5rem) clamp(1.5rem, 5vw, 4rem);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.newsletterCtaHeading {
+  font-size: clamp(38px, 6vw, 72px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--paper);
+  margin: 0 0 1.4rem;
+  max-width: 14ch;
+}
+
+.newsletterCtaSub {
+  font-size: clamp(17px, 2.2vw, 21px);
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--paper) 80%, var(--ink));
+  max-width: var(--measure);
+  margin: 0 0 2.4rem;
+}
+
+.newsletterCtaButton {
+  display: inline-block;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--paper);
+  border: 1.5px solid var(--paper);
+  padding: 0.75rem 1.75rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.newsletterCtaButton:hover,
+.newsletterCtaButton:focus-visible {
+  background: var(--paper);
+  color: var(--ink);
+  outline: none;
+}
+
 /* Finale */
 
 .finale {

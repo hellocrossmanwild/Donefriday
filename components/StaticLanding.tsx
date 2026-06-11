@@ -93,6 +93,20 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
             <p className={styles.goodsCred}>{COPY.goodsCred}</p>
           </section>
 
+          <section className={styles.newsletterCta} aria-labelledby="newsletter-cta-heading">
+            <h2 className={styles.newsletterCtaHeading} id="newsletter-cta-heading">
+              Start Sunday.<br />Done Friday.
+            </h2>
+            <p className={styles.newsletterCtaSub}>
+              A weekly newsletter for professional service businesses looking to build with AI.
+              Every week we take you step by step from idea to reality so you can launch tools
+              and products for your business.
+            </p>
+            <a className={styles.newsletterCtaButton} href="#subscribe">
+              Learn more
+            </a>
+          </section>
+
           <section className={styles.finale} aria-labelledby="stamp-your-name">
             <h2 className={styles.finaleHeading} id="stamp-your-name">
               {COPY.finaleHeading}
