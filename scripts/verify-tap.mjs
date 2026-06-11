@@ -1,5 +1,5 @@
-// Drives the tap-to-advance journey: tap the Continue button through every
-// act and screenshot each hold-point.
+// Verifies the stamped NEXT button: hidden while the film moves, pressed
+// in ~2s after each frame settles, and drives the journey on tap.
 import { chromium } from "playwright";
 
 const URL = process.env.URL ?? "http://localhost:3105";
@@ -15,17 +15,23 @@ await page.waitForFunction(
   () => document.documentElement.classList.contains("film-ready"),
   { timeout: 30000 },
 );
-await page.waitForTimeout(800);
 
 const btn = page.locator('button[aria-label="Continue to the next scene"]');
-console.log("button visible at start:", await btn.isVisible());
+
+// settle delay: hidden right after ready, pressed in ~2s later
+console.log("visible immediately after ready:", await btn.isVisible());
+await btn.waitFor({ state: "visible", timeout: 6000 });
+console.log("visible after settle delay: true");
 await page.screenshot({ path: "/tmp/tap-0-act1.png" });
 
 for (let i = 1; i <= 3; i++) {
   await btn.click();
-  await page.waitForTimeout(4200); // 2.8s glide + settle
+  await page.waitForTimeout(1200); // mid-glide — must be hidden
+  const midGlide = await btn.isVisible();
+  await btn.waitFor({ state: i < 3 ? "visible" : "hidden", timeout: 10000 }).catch(() => {});
+  await page.waitForTimeout(400);
   await page.screenshot({ path: `/tmp/tap-${i}.png` });
-  console.log(`tap ${i}: button visible:`, await btn.isVisible());
+  console.log(`tap ${i}: hidden mid-glide: ${!midGlide}, visible after settle: ${await btn.isVisible()}`);
 }
 
 await browser.close();

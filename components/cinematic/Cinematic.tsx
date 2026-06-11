@@ -85,6 +85,18 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     const q = gsap.utils.selector(stage);
     const seenActs = new Set<number>();
 
+    // The advance stamp stays hidden while the film moves; it presses in
+    // 2s after the frame settles (and never over the finale form).
+    const nextBtn = nextRef.current;
+    let nextTimer: ReturnType<typeof setTimeout> | undefined;
+    let lastP = -1;
+    const scheduleNext = () => {
+      if (nextTimer) clearTimeout(nextTimer);
+      nextBtn?.classList.remove(s.nextShown);
+      if (scroll.p > 0.78) return;
+      nextTimer = setTimeout(() => nextBtn?.classList.add(s.nextShown), 2000);
+    };
+
     // DOM timeline, normalised 0..1. Raw scroll passes through
     // remapScroll() — which holds the frame at the pins — before driving
     // the timeline, the 3D and the colour grade, all from the same value.
@@ -100,8 +112,10 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
         tl.progress(p);
         stage.style.backgroundColor = worldBackground(p);
         stage.style.setProperty("--world-fg", worldForeground(p));
-        // the advance button bows out as the finale (and its form) arrives
-        nextRef.current?.classList.toggle(s.nextHidden, p > 0.78);
+        if (Math.abs(p - lastP) > 0.0004) {
+          lastP = p;
+          scheduleNext();
+        }
         (Object.entries(ACT_MARKS) as Array<[string, number]>).forEach(([key, mark], i) => {
           if (p >= mark && !seenActs.has(i)) {
             seenActs.add(i);
@@ -154,8 +168,10 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     tl.to({}, { duration: 0.001 }, 0.999);
 
     stage.style.backgroundColor = worldBackground(0);
+    scheduleNext();
 
     return () => {
+      if (nextTimer) clearTimeout(nextTimer);
       ScrollTrigger.getAll().forEach((st) => st.kill());
       tl.kill();
       gsap.ticker.remove(raf);
@@ -295,7 +311,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           </footer>
         </div>
 
-        {/* tap-to-advance — the guide through the film */}
+        {/* tap-to-advance — a stamped NEXT, pressed in once the frame rests */}
         <button
           ref={nextRef}
           type="button"
@@ -303,16 +319,13 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           onClick={advance}
           aria-label="Continue to the next scene"
         >
-          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-            <path
-              d="M5 9l7 7 7-7"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <StampMark
+            word="NEXT"
+            color={COLORS.brick}
+            height={isMobile ? 34 : 42}
+            rotation={-4}
+            title="Next"
+          />
         </button>
       </div>
     </div>
