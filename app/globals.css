@@ -217,6 +217,8 @@ html.film .static-cut {
 /* Persistent subscribe shortcut */
 
 .skip-to-subscribe {
+  /* buttons don't inherit color — without this the outline goes dark on dark acts */
+  color: inherit;
   font-family: var(--font-mono), ui-monospace, monospace;
   font-size: 12px;
   letter-spacing: 0.12em;

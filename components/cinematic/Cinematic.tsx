@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import BuildMockup from "@/components/BuildMockup";
 import StampMark from "@/components/StampMark";
 import SubscribeForm from "@/components/SubscribeForm";
 import { COLORS, COPY } from "@/lib/brand";
@@ -12,6 +13,8 @@ import { track } from "@/lib/analytics";
 import Scene, { ScrollState } from "./Scene";
 import {
   ACT_MARKS,
+  TAP_TARGETS,
+  rawForProgress,
   remapScroll,
   worldBackground,
   worldForeground,
@@ -36,9 +39,13 @@ function dateline() {
 export default function Cinematic({ onReady }: { onReady: () => void }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
   const [ready, setReady] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  // the advance stamp invites with LEARN MORE on the opening frame,
+  // then reads NEXT once the film is rolling
+  const [pastActOne, setPastActOne] = useState(false);
   const scroll = useMemo<ScrollState>(() => ({ p: 0, press: 0 }), []);
   const isMobile = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches,
@@ -82,6 +89,18 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     const q = gsap.utils.selector(stage);
     const seenActs = new Set<number>();
 
+    // The advance stamp stays hidden while the film moves; it stamps in
+    // 1s after the frame settles (and never over the finale form).
+    const nextBtn = nextRef.current;
+    let nextTimer: ReturnType<typeof setTimeout> | undefined;
+    let lastP = -1;
+    const scheduleNext = () => {
+      if (nextTimer) clearTimeout(nextTimer);
+      nextBtn?.classList.remove(s.nextShown);
+      if (scroll.p > 0.86) return;
+      nextTimer = setTimeout(() => nextBtn?.classList.add(s.nextShown), 1000);
+    };
+
     // DOM timeline, normalised 0..1. Raw scroll passes through
     // remapScroll() — which holds the frame at the pins — before driving
     // the timeline, the 3D and the colour grade, all from the same value.
@@ -97,6 +116,11 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
         tl.progress(p);
         stage.style.backgroundColor = worldBackground(p);
         stage.style.setProperty("--world-fg", worldForeground(p));
+        if (Math.abs(p - lastP) > 0.0004) {
+          lastP = p;
+          scheduleNext();
+        }
+        setPastActOne(p > 0.17);
         (Object.entries(ACT_MARKS) as Array<[string, number]>).forEach(([key, mark], i) => {
           if (p >= mark && !seenActs.has(i)) {
             seenActs.add(i);
@@ -138,19 +162,38 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
       .to(q(`.${s.houseLine}`), { clipPath: "inset(0 0% 0 0)", duration: 0.034, ease: "power1.inOut" }, 0.694)
       .to(q(`.${s.act3}`), { autoAlpha: 0, y: -30, duration: 0.04 }, 0.745);
 
+    // THE GOODS — what a subscription gets you, by example; everything is
+    // landed before the 0.82 pin so the held frame is the completed act
+    tl.fromTo(q(`.${s.goods}`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.755)
+      .fromTo(q(`.${s.goodsKicker}`), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.02 }, 0.757);
+    const goodsRows = q(`.${s.goodsRow}`);
+    goodsRows.forEach((el, i) => {
+      tl.fromTo(
+        el,
+        { autoAlpha: 0, scale: 1.3 },
+        { autoAlpha: 1, scale: 1, duration: 0.012, ease: "power3.in" },
+        0.768 + i * 0.013,
+      );
+    });
+    tl.fromTo(q(`.${s.goodsTakeaway}`), { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.018 }, 0.796)
+      .fromTo(q(`.${s.goodsCred}`), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.014 }, 0.802)
+      .to(q(`.${s.goods}`), { autoAlpha: 0, y: -28, duration: 0.04 }, 0.83);
+
     // ACT IV — stamp your name
     tl.fromTo(
       q(`.${s.act4}`),
       { autoAlpha: 0, y: 36 },
       { autoAlpha: 1, y: 0, duration: 0.05 },
-      0.83,
+      0.9,
     );
     // keep the timeline's full duration at 1 so positions map 1:1 to progress
     tl.to({}, { duration: 0.001 }, 0.999);
 
     stage.style.backgroundColor = worldBackground(0);
+    scheduleNext();
 
     return () => {
+      if (nextTimer) clearTimeout(nextTimer);
       ScrollTrigger.getAll().forEach((st) => st.kill());
       tl.kill();
       gsap.ticker.remove(raf);
@@ -180,6 +223,22 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
     });
   }
 
+  // Tap-to-advance: animate the scroll to the next act's hold-point so the
+  // film plays through on the way — same choreography, directed pacing.
+  // Free scrolling stays available underneath; the button is the guide.
+  function advance() {
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const next = TAP_TARGETS.find((t) => t > scroll.p + 0.02) ?? 1;
+    const target = rawForProgress(next) * max;
+    const lenis = lenisRef.current;
+    if (lenis) {
+      lenis.scrollTo(target, { duration: 2.8, easing: (t: number) => 1 - Math.pow(1 - t, 3) });
+    } else {
+      window.scrollTo({ top: target, behavior: "smooth" });
+    }
+    track("tap_advance", { target: next });
+  }
+
   function jumpToSubscribe() {
     const lenis = lenisRef.current;
     const target = document.body.scrollHeight;
@@ -193,7 +252,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
   return (
     <div ref={wrapRef}>
       {/* the film's runtime (the pins absorb ~25% of it) */}
-      <div style={{ height: isMobile ? "720vh" : "950vh" }} aria-hidden="true" />
+      <div style={{ height: isMobile ? "920vh" : "1215vh" }} aria-hidden="true" />
 
       <div ref={stageRef} className={`${s.stage} ${ready ? s.stageReady : ""}`}>
         <div className={s.canvas}>
@@ -230,7 +289,6 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
         <div className={`${s.layer} ${s.act1}`}>
           <h1 className={s.title}>{COPY.title}</h1>
           <p className={s.sub}>{COPY.sub}</p>
-          <span className={`mono ${s.cue}`}>Scroll</span>
         </div>
 
         {/* ACT II */}
@@ -241,24 +299,63 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           </div>
         </div>
 
-        {/* ACT III */}
+        {/* ACT III — stamps + author intro */}
         <div className={`${s.layer} ${s.act3}`}>
           <div className={s.verbRow}>
-            {COPY.verbs.map((verb, i) => (
-              <span className={s.verb} key={verb}>
+            {COPY.steps.map((step, i) => (
+              <span className={s.verb} key={step}>
                 <StampMark
-                  word={verb}
+                  word={step.toUpperCase()}
                   color={COLORS.ink}
                   height={isMobile ? 34 : 46}
                   rotation={i % 2 === 0 ? -3 : 2.5}
-                  title={verb}
+                  title={step}
                 />
               </span>
             ))}
           </div>
           <h2 className={s.strap}>{COPY.strap}</h2>
-          <p className={s.promiseCopy}>{COPY.promise}</p>
+          <div className={s.author}>
+            <div className={s.authorAvatar} aria-hidden="true">{COPY.author.initials}</div>
+            <p className={s.authorCredential}>{COPY.author.credential}</p>
+          </div>
           <blockquote className={s.houseLine}>{COPY.houseLine}</blockquote>
+        </div>
+
+        {/* ACT IV — what you'll build */}
+        <div className={`${s.layer} ${s.goods}`}>
+          <span className={`mono ${s.goodsKicker}`}>{COPY.goodsKicker}</span>
+          <ul className={s.buildCards}>
+            {COPY.goods.map(({ industry, title, verb, mockupType, proofPoints }) => (
+              <li key={verb} className={`${s.buildCard} ${s.goodsRow}`}>
+                <div className={s.cardChrome}>
+                  <span className={s.chromeDots} aria-hidden="true">
+                    <span /><span /><span />
+                  </span>
+                  <span className={s.chromeBar} aria-hidden="true" />
+                </div>
+                <BuildMockup type={mockupType} compact />
+                <div className={s.cardFooter}>
+                  <div className={s.cardMeta}>
+                    <span className={`mono ${s.cardIndustry}`}>{industry}</span>
+                    <span className={s.cardTitle}>{title}</span>
+                  </div>
+                  <div className={s.cardRight}>
+                    <span className={`mono ${s.cardProofSingle}`}>
+                      {proofPoints[0].value} {proofPoints[0].label}
+                    </span>
+                    <StampMark
+                      word={verb}
+                      color={COLORS.brick}
+                      height={isMobile ? 22 : 26}
+                      rotation={-3}
+                      title={verb}
+                    />
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* ACT IV */}
@@ -268,12 +365,29 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
             <SubscribeForm id="subscribe-film" onDone={pressStamp} />
           </div>
           <footer className={`mono ${s.footer}`}>
-            <span>Done Friday · donefriday.com · sent weekly, Friday</span>
+            <span>doneFriday.com</span>
             <span className={s.from}>
-              {COPY.footerFrom} <a href={COPY.whisperLink.href}>{COPY.whisperLink.label}</a>
+              by <a href={COPY.whisperLink.href}>{COPY.whisperLink.label}</a> 2026
             </span>
           </footer>
         </div>
+
+        {/* tap-to-advance — a stamped NEXT, pressed in once the frame rests */}
+        <button
+          ref={nextRef}
+          type="button"
+          className={s.next}
+          onClick={advance}
+          aria-label="Continue to the next scene"
+        >
+          <StampMark
+            word={pastActOne ? "NEXT" : "LEARN MORE"}
+            color={COLORS.brick}
+            height={isMobile ? 34 : 42}
+            rotation={-4}
+            title={pastActOne ? "Next" : "Learn more"}
+          />
+        </button>
       </div>
     </div>
   );

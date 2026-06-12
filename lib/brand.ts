@@ -16,20 +16,71 @@ export const COPY = {
   domain: "donefriday.com",
   title: "Start Sunday. Done Friday.",
   strap: "Start Sunday. Done Friday.",
-  sub: "One end-to-end build, every week. Follow along, or steal the source code.",
-  // Act II — the why: the tension, then the answer the stamp delivers
+  // Act I — hero subline (single tight line, keep "weekly newsletter")
+  sub: "A weekly newsletter for professional service businesses — from idea to launched, every Friday.",
+  // Act II — the why: weight contrast; line 1 small/setup, line 2 large/payoff
   whyLines: [
-    "AI makes it easy to build anything.",
-    "We make it simple to be done by Friday.",
+    "Your business has problems AI can solve today.",
+    "We show you how — every Friday.",
   ],
-  // Act III — the promise
-  promise:
-    "Every week, one end-to-end build for your practice — shown working, start to finish. Follow along, build it yourself, or steal the source code.",
-  verbs: ["SPECCED", "WIRED", "BUILT", "SHIPPED", "SORTED"],
-  houseLine: "We don't write about AI. We build with it.",
-  // Act IV — finale
-  finaleHeading: "Stamp your name.",
-  finaleSub: "Free. Weekly. Opt-in only — unsubscribe any time.",
+  // Act III — the promise steps + author intro (replaces the echo heading)
+  promiseKicker: "From idea to…",
+  steps: ["Spec", "Prompts", "Build", "Tested", "Launched"],
+  author: {
+    initials: "TW",
+    name: "Tom Wild",
+    credential: "From someone who's launched 100+ products across fintech, insurance, accounting, healthcare, trades and marketing.",
+  },
+  houseLine: "We don't just talk about AI, we build with it together.",
+  // Act IV — what you'll build: cards with industry, proof points, mode
+  goodsKicker: "What you'll build",
+  goods: [
+    {
+      industry: "Legal",
+      title: "After-hours enquiry bot",
+      build: "Captures new client instructions outside office hours over voice and web",
+      verb: "ANSWERED",
+      solves: "Missing instructions — and new business — every evening and weekend",
+      mode: "Internal tool",
+      mockupType: "chat" as const,
+      proofPoints: [
+        { value: "35%", label: "of legal enquiries arrive out of hours" },
+        { value: "8hrs", label: "saved weekly on call handling" },
+      ],
+    },
+    {
+      industry: "Accounting",
+      title: "Automated invoice chaser",
+      build: "Sends personalised chase sequences for unpaid invoices — escalating tone, no manual input",
+      verb: "CHASED",
+      solves: "Partners spending hours chasing what the business is already owed",
+      mode: "Internal tool → license to clients",
+      mockupType: "invoice" as const,
+      proofPoints: [
+        { value: "40%", label: "fewer overdue invoices" },
+        { value: "£12k+", label: "recovered in a single firm, month one" },
+      ],
+    },
+    {
+      industry: "Recruitment",
+      title: "AI video screening",
+      build: "Video-interviews candidates guided by their CV, scores responses, flags top picks",
+      verb: "SCREENED",
+      solves: "First-round calls eating the entire week before shortlisting even begins",
+      mode: "Internal tool → license it",
+      mockupType: "screening" as const,
+      proofPoints: [
+        { value: "5×", label: "more candidates screened" },
+        { value: "10hrs+", label: "saved per recruiter, per week" },
+      ],
+    },
+  ],
+  goodsTakeaway:
+    "Built with AI, shown working start to finish — with the product thinking, UX and compliance that make it genuinely usable in your business.",
+  goodsCred: "From the studio that ships its own products — RiskPod, PulseIQ and TapReview.",
+  // Act V — finale
+  finaleHeading: "Subscribe free.",
+  finaleSub: "Sent weekly · delivered by Substack",
   successLine: "Done. See you Friday.",
   footerFrom: "From Tom Wild — the studio behind RiskPod, PulseIQ and TapReview.",
   whisperLink: { label: "Hello Crossman", href: "https://hellocrossman.com" },
