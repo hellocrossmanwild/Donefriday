@@ -15,11 +15,6 @@ function dateline() {
     .toUpperCase();
 }
 
-/**
- * The static editorial cut — server-rendered for everyone (SEO, pre-JS),
- * and the full experience for reduced-motion / no-WebGL readers.
- * Signup is above the fold; the film is optional, the conversion is not.
- */
 export default function StaticLanding({ initialDone = false }: { initialDone?: boolean }) {
   return (
     <div className={styles.page}>
@@ -35,6 +30,7 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
         </header>
 
         <main>
+          {/* Act I — hero */}
           <section className={styles.hero}>
             <div className={styles.heroStamp}>
               <StampMark word="DONE" height={72} title="DONE — the Done Friday stamp" />
@@ -44,6 +40,7 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
             <SubscribeForm id="subscribe" initialDone={initialDone} />
           </section>
 
+          {/* Act II — the why */}
           <section className={styles.why} aria-labelledby="the-why">
             <span className={`mono ${styles.kicker}`} id="the-why">
               The why
@@ -52,6 +49,7 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
             <p className={styles.whyAnswer}>{COPY.whyLines[1]}</p>
           </section>
 
+          {/* Act III — the promise + author */}
           <section className={styles.promise} aria-labelledby="the-promise">
             <span className={`mono ${styles.kicker}`} id="the-promise">
               {COPY.promiseKicker}
@@ -64,19 +62,46 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
                 </li>
               ))}
             </ul>
-            <h2 className={styles.promiseHeading}>{COPY.promiseHeading}</h2>
+            <div className={styles.author}>
+              <div className={styles.authorAvatar} aria-hidden="true">
+                {COPY.author.initials}
+              </div>
+              <p className={styles.authorCredential}>{COPY.author.credential}</p>
+            </div>
             <blockquote className={styles.houseLine}>{COPY.houseLine}</blockquote>
           </section>
 
+          {/* Act IV — what you'll build */}
           <section className={styles.goods} aria-labelledby="the-goods">
             <span className={`mono ${styles.kicker}`} id="the-goods">
               {COPY.goodsKicker}
             </span>
-            <ul className={styles.goodsList}>
-              {COPY.goods.map(({ build, verb }) => (
-                <li className={styles.goodsRow} key={verb}>
-                  <span className={styles.goodsBuild}>{build}</span>
-                  <StampMark word={verb} color={COLORS.brick} height={30} rotation={-3} title={verb} />
+            <ul className={styles.buildCards}>
+              {COPY.goods.map(({ industry, title, build, verb, solves, mode, proofPoints }) => (
+                <li key={verb} className={styles.buildCard}>
+                  <div className={styles.cardChrome}>
+                    <span className={styles.chromeDots} aria-hidden="true">
+                      <span /><span /><span />
+                    </span>
+                    <span className={styles.chromeBar} aria-hidden="true" />
+                  </div>
+                  <div className={styles.cardBody}>
+                    <span className={`mono ${styles.cardIndustry}`}>{industry}</span>
+                    <h3 className={styles.cardTitle}>{title}</h3>
+                    <p className={styles.cardBuild}>{build}</p>
+                    <p className={styles.cardSolves}>{solves}</p>
+                    <ul className={styles.cardProofs}>
+                      {proofPoints.map((p) => (
+                        <li key={p.label}>
+                          <strong>{p.value}</strong> {p.label}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className={styles.cardFooter}>
+                      <StampMark word={verb} color={COLORS.brick} height={28} rotation={-3} title={verb} />
+                      <span className={`mono ${styles.cardMode}`}>{mode}</span>
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -84,6 +109,7 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
             <p className={styles.goodsCred}>{COPY.goodsCred}</p>
           </section>
 
+          {/* Newsletter CTA */}
           <section className={styles.newsletterCta} aria-labelledby="newsletter-cta-heading">
             <h2 className={styles.newsletterCtaHeading} id="newsletter-cta-heading">
               Start Sunday.<br />Done Friday.
@@ -98,6 +124,7 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
             </a>
           </section>
 
+          {/* Act V — finale */}
           <section className={styles.finale} aria-labelledby="stamp-your-name">
             <h2 className={styles.finaleHeading} id="stamp-your-name">
               {COPY.finaleHeading}

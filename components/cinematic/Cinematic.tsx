@@ -298,7 +298,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           </div>
         </div>
 
-        {/* ACT III */}
+        {/* ACT III — stamps + author intro */}
         <div className={`${s.layer} ${s.act3}`}>
           <div className={s.verbRow}>
             {COPY.steps.map((step, i) => (
@@ -314,29 +314,50 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
             ))}
           </div>
           <h2 className={s.strap}>{COPY.strap}</h2>
-          <p className={s.promiseCopy}>{COPY.promiseHeading}</p>
+          <div className={s.author}>
+            <div className={s.authorAvatar} aria-hidden="true">{COPY.author.initials}</div>
+            <p className={s.authorCredential}>{COPY.author.credential}</p>
+          </div>
           <blockquote className={s.houseLine}>{COPY.houseLine}</blockquote>
         </div>
 
-        {/* THE GOODS */}
+        {/* ACT IV — what you'll build */}
         <div className={`${s.layer} ${s.goods}`}>
           <span className={`mono ${s.goodsKicker}`}>{COPY.goodsKicker}</span>
-          <ul className={s.goodsList}>
-            {COPY.goods.map(({ build, verb }) => (
-              <li className={s.goodsRow} key={verb}>
-                <span className={s.goodsBuild}>{build}</span>
-                <StampMark
-                  word={verb}
-                  color={COLORS.brick}
-                  height={isMobile ? 28 : 36}
-                  rotation={-3}
-                  title={verb}
-                />
+          <ul className={s.buildCards}>
+            {COPY.goods.map(({ industry, title, build, verb, solves, mode, proofPoints }) => (
+              <li key={verb} className={`${s.buildCard} ${s.goodsRow}`}>
+                <div className={s.cardChrome}>
+                  <span className={s.chromeDots} aria-hidden="true">
+                    <span /><span /><span />
+                  </span>
+                  <span className={s.chromeBar} aria-hidden="true" />
+                </div>
+                <div className={s.cardBody}>
+                  <span className={`mono ${s.cardIndustry}`}>{industry}</span>
+                  <strong className={s.cardTitle}>{title}</strong>
+                  <p className={s.goodsBuild}>{build}</p>
+                  <p className={s.cardSolves}>{solves}</p>
+                  <ul className={s.cardProofs}>
+                    {proofPoints.map((p) => (
+                      <li key={p.label}><strong>{p.value}</strong> {p.label}</li>
+                    ))}
+                  </ul>
+                  <div className={s.cardFooter}>
+                    <StampMark
+                      word={verb}
+                      color={COLORS.brick}
+                      height={isMobile ? 24 : 28}
+                      rotation={-3}
+                      title={verb}
+                    />
+                    <span className={`mono ${s.cardMode}`}>{mode}</span>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
           <p className={s.goodsTakeaway}>{COPY.goodsTakeaway}</p>
-          <p className={s.goodsCred}>{COPY.goodsCred}</p>
         </div>
 
         {/* ACT IV */}
