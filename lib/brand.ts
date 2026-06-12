@@ -16,7 +16,7 @@ export const COPY = {
   domain: "donefriday.com",
   title: "Start Sunday. Done Friday.",
   strap: "Start Sunday. Done Friday.",
-  sub: "A weekly newsletter for practice owners. One end-to-end build, every Friday — follow along or steal the source code.",
+  sub: "A weekly newsletter for professional service businesses looking to build with AI. Every week we take you step by step from idea to reality, so you can launch tools and products for your own business.",
   // Act II — the why: the tension, then the answer the stamp delivers
   whyLines: [
     "AI is making it easy to build anything you can think of.",
@@ -34,11 +34,11 @@ export const COPY = {
     { build: "An enquiry bot that answers a law firm's after-hours calls", verb: "ANSWERED" },
     // internal tool for the practice
     { build: "An invoice chaser that clears an accountancy firm's debtor list", verb: "CHASED" },
-    // product for their clients/audience
-    { build: "A booking flow an optometrist's patients use to fill empty slots", verb: "BOOKED" },
+    // internal tool for the practice
+    { build: "A screening tool that video-interviews a recruiter's candidates, guided by their CV", verb: "SCREENED" },
   ],
   goodsTakeaway:
-    "Built with AI, shown working, start to finish. Follow along, use it in your business, or steal the source code.",
+    "Built with AI, shown working start to finish — with the product thinking, UX and compliance that make it genuinely usable in your business.",
   goodsCred: "From the studio that ships its own products — RiskPod, PulseIQ and TapReview.",
   // Act IV — finale
   finaleHeading: "Subscribe now for free.",

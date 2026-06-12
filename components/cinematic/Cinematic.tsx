@@ -42,6 +42,9 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
   const lenisRef = useRef<Lenis | null>(null);
   const [ready, setReady] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  // the advance stamp invites with LEARN MORE on the opening frame,
+  // then reads NEXT once the film is rolling
+  const [pastActOne, setPastActOne] = useState(false);
   const scroll = useMemo<ScrollState>(() => ({ p: 0, press: 0 }), []);
   const isMobile = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches,
@@ -116,6 +119,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           lastP = p;
           scheduleNext();
         }
+        setPastActOne(p > 0.17);
         (Object.entries(ACT_MARKS) as Array<[string, number]>).forEach(([key, mark], i) => {
           if (p >= mark && !seenActs.has(i)) {
             seenActs.add(i);
@@ -342,9 +346,9 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
             <SubscribeForm id="subscribe-film" onDone={pressStamp} />
           </div>
           <footer className={`mono ${s.footer}`}>
-            <span>Done Friday · donefriday.com · sent weekly, Friday</span>
+            <span>doneFriday.com</span>
             <span className={s.from}>
-              {COPY.footerFrom} <a href={COPY.whisperLink.href}>{COPY.whisperLink.label}</a>
+              by <a href={COPY.whisperLink.href}>{COPY.whisperLink.label}</a> 2026
             </span>
           </footer>
         </div>
@@ -358,11 +362,11 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           aria-label="Continue to the next scene"
         >
           <StampMark
-            word="NEXT"
+            word={pastActOne ? "NEXT" : "LEARN MORE"}
             color={COLORS.brick}
             height={isMobile ? 34 : 42}
             rotation={-4}
-            title="Next"
+            title={pastActOne ? "Next" : "Learn more"}
           />
         </button>
       </div>
