@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import BuildMockup from "@/components/BuildMockup";
 import StampMark from "@/components/StampMark";
 import SubscribeForm from "@/components/SubscribeForm";
 import { COLORS, COPY } from "@/lib/brand";
@@ -42,6 +43,9 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
   const lenisRef = useRef<Lenis | null>(null);
   const [ready, setReady] = useState(false);
   const [fontsLoaded, setFontsLoaded] = useState(false);
+  // the advance stamp invites with LEARN MORE on the opening frame,
+  // then reads NEXT once the film is rolling
+  const [pastActOne, setPastActOne] = useState(false);
   const scroll = useMemo<ScrollState>(() => ({ p: 0, press: 0 }), []);
   const isMobile = useMemo(
     () => typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches,
@@ -116,6 +120,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           lastP = p;
           scheduleNext();
         }
+        setPastActOne(p > 0.17);
         (Object.entries(ACT_MARKS) as Array<[string, number]>).forEach(([key, mark], i) => {
           if (p >= mark && !seenActs.has(i)) {
             seenActs.add(i);
@@ -294,45 +299,63 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           </div>
         </div>
 
-        {/* ACT III */}
+        {/* ACT III — stamps + author intro */}
         <div className={`${s.layer} ${s.act3}`}>
           <div className={s.verbRow}>
-            {COPY.verbs.map((verb, i) => (
-              <span className={s.verb} key={verb}>
+            {COPY.steps.map((step, i) => (
+              <span className={s.verb} key={step}>
                 <StampMark
-                  word={verb}
+                  word={step.toUpperCase()}
                   color={COLORS.ink}
                   height={isMobile ? 34 : 46}
                   rotation={i % 2 === 0 ? -3 : 2.5}
-                  title={verb}
+                  title={step}
                 />
               </span>
             ))}
           </div>
           <h2 className={s.strap}>{COPY.strap}</h2>
-          <p className={s.promiseCopy}>{COPY.promise}</p>
+          <div className={s.author}>
+            <div className={s.authorAvatar} aria-hidden="true">{COPY.author.initials}</div>
+            <p className={s.authorCredential}>{COPY.author.credential}</p>
+          </div>
           <blockquote className={s.houseLine}>{COPY.houseLine}</blockquote>
         </div>
 
-        {/* THE GOODS */}
+        {/* ACT IV — what you'll build */}
         <div className={`${s.layer} ${s.goods}`}>
           <span className={`mono ${s.goodsKicker}`}>{COPY.goodsKicker}</span>
-          <ul className={s.goodsList}>
-            {COPY.goods.map(({ build, verb }) => (
-              <li className={s.goodsRow} key={verb}>
-                <span className={s.goodsBuild}>{build}</span>
-                <StampMark
-                  word={verb}
-                  color={COLORS.brick}
-                  height={isMobile ? 28 : 36}
-                  rotation={-3}
-                  title={verb}
-                />
+          <ul className={s.buildCards}>
+            {COPY.goods.map(({ industry, title, verb, mockupType, proofPoints }) => (
+              <li key={verb} className={`${s.buildCard} ${s.goodsRow}`}>
+                <div className={s.cardChrome}>
+                  <span className={s.chromeDots} aria-hidden="true">
+                    <span /><span /><span />
+                  </span>
+                  <span className={s.chromeBar} aria-hidden="true" />
+                </div>
+                <BuildMockup type={mockupType} compact />
+                <div className={s.cardFooter}>
+                  <div className={s.cardMeta}>
+                    <span className={`mono ${s.cardIndustry}`}>{industry}</span>
+                    <span className={s.cardTitle}>{title}</span>
+                  </div>
+                  <div className={s.cardRight}>
+                    <span className={`mono ${s.cardProofSingle}`}>
+                      {proofPoints[0].value} {proofPoints[0].label}
+                    </span>
+                    <StampMark
+                      word={verb}
+                      color={COLORS.brick}
+                      height={isMobile ? 22 : 26}
+                      rotation={-3}
+                      title={verb}
+                    />
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
-          <p className={s.goodsTakeaway}>{COPY.goodsTakeaway}</p>
-          <p className={s.goodsCred}>{COPY.goodsCred}</p>
         </div>
 
         {/* ACT IV */}
@@ -342,9 +365,9 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
             <SubscribeForm id="subscribe-film" onDone={pressStamp} />
           </div>
           <footer className={`mono ${s.footer}`}>
-            <span>Done Friday · donefriday.com · sent weekly, Friday</span>
+            <span>doneFriday.com</span>
             <span className={s.from}>
-              {COPY.footerFrom} <a href={COPY.whisperLink.href}>{COPY.whisperLink.label}</a>
+              by <a href={COPY.whisperLink.href}>{COPY.whisperLink.label}</a> 2026
             </span>
           </footer>
         </div>
@@ -358,11 +381,11 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
           aria-label="Continue to the next scene"
         >
           <StampMark
-            word="NEXT"
+            word={pastActOne ? "NEXT" : "LEARN MORE"}
             color={COLORS.brick}
             height={isMobile ? 34 : 42}
             rotation={-4}
-            title="Next"
+            title={pastActOne ? "Next" : "Learn more"}
           />
         </button>
       </div>
