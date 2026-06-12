@@ -5,6 +5,7 @@ import { Canvas } from "@react-three/fiber";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import BuildMockup from "@/components/BuildMockup";
 import StampMark from "@/components/StampMark";
 import SubscribeForm from "@/components/SubscribeForm";
 import { COLORS, COPY } from "@/lib/brand";
@@ -325,7 +326,7 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
         <div className={`${s.layer} ${s.goods}`}>
           <span className={`mono ${s.goodsKicker}`}>{COPY.goodsKicker}</span>
           <ul className={s.buildCards}>
-            {COPY.goods.map(({ industry, title, build, verb, solves, mode, proofPoints }) => (
+            {COPY.goods.map(({ industry, title, verb, mockupType, proofPoints }) => (
               <li key={verb} className={`${s.buildCard} ${s.goodsRow}`}>
                 <div className={s.cardChrome}>
                   <span className={s.chromeDots} aria-hidden="true">
@@ -333,31 +334,28 @@ export default function Cinematic({ onReady }: { onReady: () => void }) {
                   </span>
                   <span className={s.chromeBar} aria-hidden="true" />
                 </div>
-                <div className={s.cardBody}>
-                  <span className={`mono ${s.cardIndustry}`}>{industry}</span>
-                  <strong className={s.cardTitle}>{title}</strong>
-                  <p className={s.goodsBuild}>{build}</p>
-                  <p className={s.cardSolves}>{solves}</p>
-                  <ul className={s.cardProofs}>
-                    {proofPoints.map((p) => (
-                      <li key={p.label}><strong>{p.value}</strong> {p.label}</li>
-                    ))}
-                  </ul>
-                  <div className={s.cardFooter}>
+                <BuildMockup type={mockupType} compact />
+                <div className={s.cardFooter}>
+                  <div className={s.cardMeta}>
+                    <span className={`mono ${s.cardIndustry}`}>{industry}</span>
+                    <span className={s.cardTitle}>{title}</span>
+                  </div>
+                  <div className={s.cardRight}>
+                    <span className={`mono ${s.cardProofSingle}`}>
+                      {proofPoints[0].value} {proofPoints[0].label}
+                    </span>
                     <StampMark
                       word={verb}
                       color={COLORS.brick}
-                      height={isMobile ? 24 : 28}
+                      height={isMobile ? 22 : 26}
                       rotation={-3}
                       title={verb}
                     />
-                    <span className={`mono ${s.cardMode}`}>{mode}</span>
                   </div>
                 </div>
               </li>
             ))}
           </ul>
-          <p className={s.goodsTakeaway}>{COPY.goodsTakeaway}</p>
         </div>
 
         {/* ACT IV */}

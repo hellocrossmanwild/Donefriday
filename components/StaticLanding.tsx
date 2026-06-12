@@ -1,3 +1,4 @@
+import BuildMockup from "@/components/BuildMockup";
 import StampMark from "@/components/StampMark";
 import SubscribeForm from "@/components/SubscribeForm";
 import { COLORS, COPY } from "@/lib/brand";
@@ -77,7 +78,7 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
               {COPY.goodsKicker}
             </span>
             <ul className={styles.buildCards}>
-              {COPY.goods.map(({ industry, title, build, verb, solves, mode, proofPoints }) => (
+              {COPY.goods.map(({ industry, title, verb, mockupType, proofPoints }) => (
                 <li key={verb} className={styles.buildCard}>
                   <div className={styles.cardChrome}>
                     <span className={styles.chromeDots} aria-hidden="true">
@@ -85,22 +86,18 @@ export default function StaticLanding({ initialDone = false }: { initialDone?: b
                     </span>
                     <span className={styles.chromeBar} aria-hidden="true" />
                   </div>
-                  <div className={styles.cardBody}>
-                    <span className={`mono ${styles.cardIndustry}`}>{industry}</span>
-                    <h3 className={styles.cardTitle}>{title}</h3>
-                    <p className={styles.cardBuild}>{build}</p>
-                    <p className={styles.cardSolves}>{solves}</p>
-                    <ul className={styles.cardProofs}>
-                      {proofPoints.map((p) => (
-                        <li key={p.label}>
-                          <strong>{p.value}</strong> {p.label}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className={styles.cardFooter}>
-                      <StampMark word={verb} color={COLORS.brick} height={28} rotation={-3} title={verb} />
-                      <span className={`mono ${styles.cardMode}`}>{mode}</span>
+                  <BuildMockup type={mockupType} />
+                  <div className={styles.cardFooter}>
+                    <div className={styles.cardMeta}>
+                      <span className={`mono ${styles.cardIndustry}`}>{industry}</span>
+                      <h3 className={styles.cardTitle}>{title}</h3>
+                      <ul className={styles.cardProofs}>
+                        {proofPoints.map((p) => (
+                          <li key={p.label}><strong>{p.value}</strong> {p.label}</li>
+                        ))}
+                      </ul>
                     </div>
+                    <StampMark word={verb} color={COLORS.brick} height={28} rotation={-3} title={verb} />
                   </div>
                 </li>
               ))}

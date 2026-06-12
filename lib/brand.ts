@@ -42,6 +42,7 @@ export const COPY = {
       verb: "ANSWERED",
       solves: "Missing instructions — and new business — every evening and weekend",
       mode: "Internal tool",
+      mockupType: "chat" as const,
       proofPoints: [
         { value: "35%", label: "of legal enquiries arrive out of hours" },
         { value: "8hrs", label: "saved weekly on call handling" },
@@ -54,6 +55,7 @@ export const COPY = {
       verb: "CHASED",
       solves: "Partners spending hours chasing what the business is already owed",
       mode: "Internal tool → license to clients",
+      mockupType: "invoice" as const,
       proofPoints: [
         { value: "40%", label: "fewer overdue invoices" },
         { value: "£12k+", label: "recovered in a single firm, month one" },
@@ -66,6 +68,7 @@ export const COPY = {
       verb: "SCREENED",
       solves: "First-round calls eating the entire week before shortlisting even begins",
       mode: "Internal tool → license it",
+      mockupType: "screening" as const,
       proofPoints: [
         { value: "5×", label: "more candidates screened" },
         { value: "10hrs+", label: "saved per recruiter, per week" },
